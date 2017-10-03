@@ -25,8 +25,8 @@ public class MenuBar extends JMenuBar implements ActionListener{
 		
 		//options
 		newGraph = new JMenuItem("New Graph");
-		save = new JMenuItem("Save to text file");
-		load = new JMenuItem("Load from text file");
+		save = new JMenuItem("Save to Text File");
+		load = new JMenuItem("Load from Text File");
 		quit = new JMenuItem("Quit");
 		options.add(newGraph);
 		options.add(save);
@@ -35,7 +35,7 @@ public class MenuBar extends JMenuBar implements ActionListener{
 		
 		//help
 		viewHelp = new JMenuItem("View Help");
-		about = new JMenuItem("About Calculator");
+		about = new JMenuItem("About Simulator");
 		help.add(viewHelp);
 		help.add(about);
 		
@@ -53,6 +53,9 @@ public class MenuBar extends JMenuBar implements ActionListener{
 	
 	
 	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == quit) {
+			JOptionPane.showConfirmDialog(null, "Are you sure?", "Are you sure?", JOptionPane.YES_NO_OPTION);
+		}
 		if(e.getSource() == viewHelp){
 			JOptionPane helpPane = new JOptionPane("Help documentation goes here");
 			JDialog helpDialog = helpPane.createDialog((JFrame)null, "Help");
