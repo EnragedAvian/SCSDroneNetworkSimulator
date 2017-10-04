@@ -19,6 +19,8 @@ public class DrawPanel extends JPanel {
         //Graphics2D g2 = ( Graphics2D ) g; // cast g to Graphics2D  
 
         g.setColor(Color.BLUE);
-        g.drawArc(500, 500, 250, 250, 0, 90);
+        g.drawArc(getWidth() / 10, getHeight() / 10, getWidth()/5, getHeight() / 5, 0, 90);
+        g.setColor(Color.RED);
+        g.drawArc(getWidth() / 10, getHeight() / 10, getWidth()/5, getHeight() / 5, 90, 90);
     }
 }
