@@ -12,7 +12,7 @@ public class Trajectory {
 	private float radius = 10;
 	
 	
-	public ArrayList<Trajectory> trajectories;
+	public ArrayList<Trajectory> trajectories = new ArrayList();
 	
 	/*public void buildNetwork() {
 		for (int i = 0; i<trajectories.size(); i++) {
