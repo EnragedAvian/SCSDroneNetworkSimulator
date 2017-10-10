@@ -1,0 +1,1 @@
+// Trajectory class which contains circular trajectory object
