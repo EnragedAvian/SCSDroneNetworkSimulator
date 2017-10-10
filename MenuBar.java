@@ -11,9 +11,9 @@ import javax.swing.JOptionPane;
 public class MenuBar extends JMenuBar implements ActionListener{
 	private JMenu options;
 	private JMenu help;
-	private JMenuItem newGraph;
-	private JMenuItem save;
-	private JMenuItem load;
+	protected JMenuItem newGraph;
+	protected JMenuItem save;
+	protected JMenuItem load;
 	private JMenuItem quit;
 	private JMenuItem viewHelp;
 	private JMenuItem about;
@@ -57,20 +57,17 @@ public class MenuBar extends JMenuBar implements ActionListener{
 			if(JOptionPane.showConfirmDialog(null, "Are you sure?", "Confirmation", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
 				System.exit(0);
 			}
-			else{
-				
-			}
 		}
 		if(e.getSource() == viewHelp){
 			JOptionPane helpPane = new JOptionPane("Help documentation goes here");
 			JDialog helpDialog = helpPane.createDialog((JFrame)null, "Help");
-			helpDialog.setLocation(20,20);
+			//helpDialog.setLocation(20,20);
 			helpDialog.setVisible(true);
 		}
 		if(e.getSource() == about){
 			JOptionPane aboutPane = new JOptionPane("Created 2017 for Synchronized Drones project");
 			JDialog aboutDialog = aboutPane.createDialog((JFrame)null, "About");
-			aboutDialog.setLocation(20,20);
+			//aboutDialog.setLocation(20,20);
 			aboutDialog.setVisible(true);
 		}
 	}

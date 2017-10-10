@@ -37,8 +37,8 @@ public class ButtonPanel extends JPanel{
 		
 		//set panel to GridLayout
 		GridLayout layout = new GridLayout(4,2);
-		layout.setHgap(20);
-		layout.setVgap(50);
+		layout.setHgap(5);
+		layout.setVgap(5);
 		setLayout(layout);
 		add(start);
 		add(autoGrid);
