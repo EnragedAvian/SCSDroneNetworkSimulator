@@ -5,6 +5,7 @@ import java.lang.Math;
 public class Neighbor {
 	int trajID_a;	// IDs of the specific trajectories
 	int trajID_b;
+	float trajDistance;	// Distance between the two trajectories
 	float angle_a;	// Angle between positive x axis and the angle of the trajectory
 	float angle_b;
 	float detectIn_a;	// Beginning detection angle for trajectories
@@ -20,6 +21,12 @@ public class Neighbor {
 	Neighbor(Trajectory a, Trajectory b) {
 		trajID_a = a.getID();
 		trajID_b = b.getID();
+		
+		// Calculating the distance between the two trajectories
+		float xRange = Math.abs(a.getX() - b.getX());
+		float yRange = Math.abs(a.getY() - b.getY());
+		float distance = (float)Math.sqrt((double)(xRange*xRange + yRange*yRange));
+		trajDistance = distance;
 		
 		// math for determining both angles a and b
 		if(a.getX()<=b.getX()) {	// Testing to see if a is to the left of b, ensuring that the angle_a falls between +/- pi/2
@@ -47,7 +54,7 @@ public class Neighbor {
 		}
 		
 		// math for determining the detectIn angle for both a and b
-		
+	
 		
 		
 	}
