@@ -26,10 +26,45 @@ public class Window extends JFrame implements ActionListener{
 		setDefaultCloseOperation(EXIT_ON_CLOSE); //terminate program when closed
 		setVisible(true);
 		setTitle("Drone Simulator");
+		
+		
+		buttons.addDrone.addActionListener(this);
+		buttons.addTraj.addActionListener(this);
+		buttons.autofill.addActionListener(this);
+		buttons.autoGrid.addActionListener(this);
+		buttons.removeEdges.addActionListener(this);
+		buttons.removeTraj.addActionListener(this);
+		buttons.showEdges.addActionListener(this);
+		buttons.start.addActionListener(this);
 	}
 	
-	public void actionPerformed(ActionEvent arg0) {
+	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
+		if(e.getSource() == buttons.addDrone){
+			
+		}
+		if(e.getSource() == buttons.addTraj){
+			
+		}
+		if(e.getSource() == buttons.autofill){
+			
+		}
+		if(e.getSource() == buttons.autoGrid){
+			
+		}
+		if(e.getSource() == buttons.removeEdges){
+			
+		}
+		if(e.getSource() == buttons.removeTraj){
+			
+		}
+		if(e.getSource() == buttons.showEdges){
+			
+		}
+		if(e.getSource() == buttons.start){
+			
+		}
+
 		
 	}
 

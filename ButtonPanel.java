@@ -7,7 +7,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 public class ButtonPanel extends JPanel{
-	private JButton start, autoGrid, addTraj, removeTraj, addDrone, autofill, showEdges, removeEdges;
+	protected JButton start, autoGrid, addTraj, removeTraj, addDrone, autofill, showEdges, removeEdges;
 	
 	public ButtonPanel(){
 		try {

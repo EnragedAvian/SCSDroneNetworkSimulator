@@ -54,7 +54,12 @@ public class MenuBar extends JMenuBar implements ActionListener{
 	
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == quit) {
-			JOptionPane.showConfirmDialog(null, "Are you sure?", "Are you sure?", JOptionPane.YES_NO_OPTION);
+			if(JOptionPane.showConfirmDialog(null, "Are you sure?", "Confirmation", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
+				System.exit(0);
+			}
+			else{
+				
+			}
 		}
 		if(e.getSource() == viewHelp){
 			JOptionPane helpPane = new JOptionPane("Help documentation goes here");
