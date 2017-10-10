@@ -1,5 +1,7 @@
 // Neighbor class contains a links between the graph of trajectories
 
+import java.lang.Math;
+
 public class Neighbor {
 	int trajID_a;	// IDs of the specific trajectories
 	int trajID_b;
@@ -18,6 +20,34 @@ public class Neighbor {
 	Neighbor(Trajectory a, Trajectory b) {
 		trajID_a = a.getID();
 		trajID_b = b.getID();
+		
+		// math for determining both angles a and b
+		if(a.getX()<=b.getX()) {	// Testing to see if a is to the left of b, ensuring that the angle_a falls between +/- pi/2
+			float xDist = b.getX()-a.getX();
+			float yDist = b.getY()-a.getY();
+			angle_a = (float)Math.atan((double)(yDist/xDist));
+			angle_b = (float)(angle_a+Math.PI);
+		} else {		// If a is to the right of b, use b as the reference point and measure angles from b
+			float xDist = a.getX()-b.getX();
+			float yDist = a.getY()-b.getY();
+			angle_b = (float)Math.atan((double)(yDist/xDist));
+			angle_a = (float)(angle_b+Math.PI);
+		}
+		while(angle_a>2*Math.PI) {	// Making sure that angle_a is within the range of 0-2pi (decrementing)
+			angle_a -= (float)(2*Math.PI);
+		}
+		while(angle_a<2*Math.PI) {	// Making sure that angle_a is within the range of 0-2pi (incrementing)
+			angle_a += (float)(2*Math.PI);
+		}
+		while(angle_b>2*Math.PI) {	// Same as above except for angle_b
+			angle_a -= (float)(2*Math.PI);
+		}
+		while(angle_b<2*Math.PI) {
+			angle_a += (float)(2*Math.PI);
+		}
+		
+		// math for determining the detectIn angle for both a and b
+		
 		
 		
 	}
