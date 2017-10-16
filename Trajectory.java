@@ -53,6 +53,10 @@ public class Trajectory {
 		return y;
 	}
 	
+	int getDir() {
+		return direction;
+	}
+	
 	boolean inRange(Trajectory t) {
 		float xDist = Math.abs(x - t.getX());
 		float yDist = Math.abs(y - t.getY());
