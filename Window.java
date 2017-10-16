@@ -1,4 +1,6 @@
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JFrame;
@@ -20,17 +22,66 @@ public class Window extends JFrame implements ActionListener{
 		add(buttons, BorderLayout.WEST);
 		add(draw);
 		pack();
-		
+		draw.setBackground(Color.WHITE);
+				
 		//window settings
+		setSize(500, 300);
 		setExtendedState(JFrame.MAXIMIZED_BOTH); //fullscreen
 		setDefaultCloseOperation(EXIT_ON_CLOSE); //terminate program when closed
 		setVisible(true);
 		setTitle("Drone Simulator");
+		
+		
+		buttons.addDrone.addActionListener(this);
+		buttons.addTraj.addActionListener(this);
+		buttons.autofill.addActionListener(this);
+		buttons.autoGrid.addActionListener(this);
+		buttons.removeEdges.addActionListener(this);
+		buttons.removeTraj.addActionListener(this);
+		buttons.showEdges.addActionListener(this);
+		buttons.start.addActionListener(this);
+		
+		menu.load.addActionListener(this);
+		menu.newGraph.addActionListener(this);
+		menu.save.addActionListener(this);
 	}
 	
-	public void actionPerformed(ActionEvent arg0) {
+	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		
+		if(e.getSource() == buttons.addDrone){
+			
+		}
+		if(e.getSource() == buttons.addTraj){
+			
+		}
+		if(e.getSource() == buttons.autofill){
+			
+		}
+		if(e.getSource() == buttons.autoGrid){
+			
+		}
+		if(e.getSource() == buttons.removeEdges){
+			
+		}
+		if(e.getSource() == buttons.removeTraj){
+			
+		}
+		if(e.getSource() == buttons.showEdges){
+			
+		}
+		if(e.getSource() == buttons.start){
+			
+		}
+
+		if(e.getSource() == menu.load){
+			//see line 960 in ScreenWindow of old sim
+		}
+		if(e.getSource() == menu.newGraph){
+			
+		}
+		if(e.getSource() == menu.save){
+			//see line 906 in ScreenWindow of old sim
+		}
 	}
 
 }

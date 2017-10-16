@@ -49,3 +49,7 @@ Temporary Items
 /Window.class
 /ButtonPanel.class
 /MenuBar.class
+/Constants.class
+/Neighbor.class
+/Robot.class
+/Trajectory.class

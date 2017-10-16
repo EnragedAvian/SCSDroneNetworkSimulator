@@ -7,7 +7,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 public class ButtonPanel extends JPanel{
-	private JButton start, autoGrid, addTraj, removeTraj, addDrone, autofill, showEdges, removeEdges;
+	protected JButton start, autoGrid, addTraj, removeTraj, addDrone, autofill, showEdges, removeEdges;
 	
 	public ButtonPanel(){
 		try {
@@ -37,8 +37,8 @@ public class ButtonPanel extends JPanel{
 		
 		//set panel to GridLayout
 		GridLayout layout = new GridLayout(4,2);
-		layout.setHgap(20);
-		layout.setVgap(50);
+		layout.setHgap(5);
+		layout.setVgap(5);
 		setLayout(layout);
 		add(start);
 		add(autoGrid);
