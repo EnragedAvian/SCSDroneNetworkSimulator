@@ -46,7 +46,7 @@ public class Neighbor {
 			angle_a = (float)(angle_b+Math.PI);
 		}
 		// Placing angles within desired range
-		angle_a = normalizeAngle(angle_a);
+		angle_a = normalizeAngle(angle_a);  
 		angle_b = normalizeAngle(angle_b);
 
 		// math for determining the detectIn angle for both a and b
