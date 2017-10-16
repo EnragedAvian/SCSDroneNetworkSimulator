@@ -5,6 +5,8 @@ import java.lang.Math;
 public class Neighbor {
 	int trajID_a;	// IDs of the specific trajectories
 	int trajID_b;
+	int trajDir_a;	// Directions of the specific trajectories
+	int trajDir_b;
 	float trajDistance;	// Distance between the two trajectories
 	float angle_a;	// Angle between positive x axis and the angle of the trajectory
 	float angle_b;
@@ -22,8 +24,11 @@ public class Neighbor {
 		trajID_a = a.getID();
 		trajID_b = b.getID();
 		
+		trajDir_a = a.getDir();
+		trajDir_b = b.getDir();
+		
 		// Calculating the distance between the two trajectories
-		float xRange = Math.abs(a.getX() - b.getX());
+		float xRange = Math.abs(a.getX() - b.getX());	// defining variables containing x and y distances between the trajectories
 		float yRange = Math.abs(a.getY() - b.getY());
 		float distance = (float)Math.sqrt((double)(xRange*xRange + yRange*yRange));
 		trajDistance = distance;
@@ -40,22 +45,37 @@ public class Neighbor {
 			angle_b = (float)Math.atan((double)(yDist/xDist));
 			angle_a = (float)(angle_b+Math.PI);
 		}
-		while(angle_a>2*Math.PI) {	// Making sure that angle_a is within the range of 0-2pi (decrementing)
-			angle_a -= (float)(2*Math.PI);
-		}
-		while(angle_a<2*Math.PI) {	// Making sure that angle_a is within the range of 0-2pi (incrementing)
-			angle_a += (float)(2*Math.PI);
-		}
-		while(angle_b>2*Math.PI) {	// Same as above except for angle_b
-			angle_a -= (float)(2*Math.PI);
-		}
-		while(angle_b<2*Math.PI) {
-			angle_a += (float)(2*Math.PI);
-		}
-		
+		// Placing angles within desired range
+		angle_a = normalizeAngle(angle_a);
+		angle_b = normalizeAngle(angle_b);
+
 		// math for determining the detectIn angle for both a and b
+		float baseDetect;		// Base angle, essentially calculating the angle between the detect range and angle_a/angle_b
+		baseDetect = (float)Math.acos((double)((distance - Constants.wifiRange)/Constants.trajRadius));
+		if (trajDir_a == 1) {
+			detectIn_a = angle_a - baseDetect;
+			detectIn_b = angle_b + baseDetect;
+		} else if (trajDir_a == 1) {
+			detectIn_a = angle_a + baseDetect;
+			detectIn_b = angle_b - baseDetect;
+		}
+		//placing angles within desired range
+		detectIn_a = normalizeAngle(detectIn_a);
+		detectIn_b = normalizeAngle(detectIn_b);
+		
+		// math determining the transitionIn angle for both a and b
+		float baseTransition;	// defining base angle for transitions 
+		
+	}
 	
-		
-		
+	float normalizeAngle(float angle) {	// Function which places an angle between range of 0-2pi.
+		float newAngle = angle;
+		while(newAngle>2*Math.PI) {	// Making sure that angle_a is within the range of 0-2pi (decrementing)
+			angle_a -= (float)(2*Math.PI);
+		}
+		while(newAngle<2*Math.PI) {	// Making sure that angle_a is within the range of 0-2pi (incrementing)
+			angle_a += (float)(2*Math.PI);
+		}
+		return newAngle;
 	}
 }
