@@ -61,7 +61,7 @@ public class Neighbor {
 		}
 		//placing angles within desired range
 		detectIn_a = normalizeAngle(detectIn_a);
-		detectIn_b = normalizeAngle(detectIn_b);
+		detectIn_b = normalizeAngle(detectIn_b);  
 		
 		// math determining the transitionIn angle for both a and b
 		float baseTransition;	// defining base angle for transitions 
