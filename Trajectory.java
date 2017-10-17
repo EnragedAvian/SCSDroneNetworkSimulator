@@ -29,11 +29,27 @@ public class Trajectory {
 			direction = 1;
 		} else {
 			//Knowingly creating issues that can be fixed later. Namely, that there is no checking to see if trajectories are too close to one another
+			ArrayList<Trajectory> compareTrajectories = new ArrayList();
 			for (int i = 0; i<trajectories.size(); i++) {
 				if (trajectories.get(i).getID()!=trajID) {
 					if (inRange(trajectories.get(i))) {
-						
+						compareTrajectories.add(trajectories.get(i));
 					}
+				}
+			}
+			int oldestTraj = 999999;	// Initializing to high value in order to find smaller values than it
+			int arrayID = 0;
+			for (int j = 0; j<compareTrajectories.size(); j++) {	// Creating link with the oldest trajectory in range first, then making other links based off of that.
+				 if (compareTrajectories.get(j).getID() < oldestTraj) {
+					 oldestTraj = compareTrajectories.get(j).getID();
+					 arrayID = j;
+				 }				
+			}
+			direction = -1 * compareTrajectories.get(arrayID).getDir();
+			for (int k = 0; k<compareTrajectories.size(); k++) {
+				if (direction == -1 * compareTrajectories.get(k).getDir()) {
+					addNeighbor(compareTrajectories.get(k));
+					compareTrajectories.get(k).addNeighbor(this);;
 				}
 			}
 		}
@@ -55,6 +71,11 @@ public class Trajectory {
 	
 	int getDir() {
 		return direction;
+	}
+	
+	void addNeighbor(Trajectory t) {
+		Neighbor newNeighbor = new Neighbor(this, t);
+		neighbors.add(newNeighbor);
 	}
 	
 	boolean inRange(Trajectory t) {
