@@ -8,7 +8,7 @@ public class Trajectory {
 	private float y;	// y coordinate of vertex
 	private int trajID;	// Identification number for trajectory
 	private int direction;
-	private ArrayList<Neighbor> neighbors;	// Neighbors to be better defined later
+	ArrayList<Neighbor> neighbors;	// Neighbors to be better defined later
 	private float radius = 10;
 	
 	

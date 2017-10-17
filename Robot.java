@@ -10,6 +10,9 @@ public class Robot {
 	private int ID;
 	private boolean transitioningIn;
 	private boolean transitioningOut;
+	private boolean detected;	// checks to see whether or not robot has been detected in desired range.
+	private boolean checked;
+	private boolean swapped;
 	
 	public ArrayList<Robot> robots;
 	
@@ -20,7 +23,7 @@ public class Robot {
 		ID = t.getID();	// Current logic won't work if robots are created while the simulation is running.
 		transitioningIn = false;
 		transitioningOut = false;
-		radius = Constants.trajRadius;	// TODO fix so that constants still work
+		radius = Constants.trajRadius;
 		robots.add(this);
 	}
 	
@@ -32,7 +35,7 @@ public class Robot {
 					float xDist = Math.abs(this.getX() - robots.get(i).getX());
 					float yDist = Math.abs(this.getY() - robots.get(i).getY());
 					float dist = (float)Math.sqrt((double)(xDist*xDist + yDist*yDist));
-					if (dist <= Constants.wifiRange) {	// TODO fix so that constants still work
+					if (dist <= Constants.wifiRange) {
 						return true;
 					}
 				}
@@ -42,8 +45,84 @@ public class Robot {
 	}
 	
 	void move() {
-		angle += Constants.robotSpeed;
-		//TO BE UPDATED LATER
+		if (t.getDir() == 1) {	// Checking direction of robot on trajectory
+			angle += Constants.robotSpeed;
+			angle = Neighbor.normalizeAngle(angle);
+			for (int i = 0; i < t.neighbors.size(); i++) {
+				// executing checking function, looking to see if robot in neighboring trajectory is within range.
+				if (t.neighbors.get(i).detectIn_a > t.neighbors.get(i).transitionIn_a ) {	// Testing case if the detecting range passes across the 0/2pi radian line			
+					if ((angle > t.neighbors.get(i).detectIn_a || angle < t.neighbors.get(i).transitionIn_a) && !detected) {	// Checking to see if the robot is within the detect range, not cycling through loop if robot has already detected something.
+						detected = checkNeighbor(t.neighbors.get(i).traj_b);
+					}
+					checked = true;
+				} else if(t.neighbors.get(i).detectIn_a < t.neighbors.get(i).transitionIn_a) {
+					if ((angle > t.neighbors.get(i).detectIn_a && angle < t.neighbors.get(i).transitionIn_a) && !detected) {
+						detected = checkNeighbor(t.neighbors.get(i).traj_b);
+					}
+					checked = true;
+				}
+				
+				// Logic that occurs when the robot is in the transition range. If the robot has checked something, and there is no robot to be found, it assigns the value of transitioningIn to true and resets checked to false	
+				if (t.neighbors.get(i).transitionIn_a > t.neighbors.get(i).angle_a) {	// Checking to see if transitionIn range crosses over 0/2pi radian line
+					if (angle > t.neighbors.get(i).transitionIn_a || angle < t.neighbors.get(i).angle_a) {
+						if(!detected && checked) {
+							transitioningIn = true;
+							checked = false;
+						}
+					}
+				} else if (t.neighbors.get(i).transitionIn_a < t.neighbors.get(i).angle_a) {
+					if (angle > t.neighbors.get(i).transitionIn_a && angle < t.neighbors.get(i).angle_a) {
+						if(!detected && checked) {
+							transitioningIn = true;
+							checked = false;
+						}
+					}
+				}
+				
+				// Dynamically assigning the radius of the robot based on whether or not the robot is in the transitioning phase
+				if (t.neighbors.get(i).transitionIn_a > t.neighbors.get(i).angle_a) {	// Checking to see if transitionIn range crosses over 0/2pi radian line
+					if ((angle > t.neighbors.get(i).transitionIn_a || angle < t.neighbors.get(i).angle_a) && transitioningIn) {
+						radius = (float)(Constants.trajRadius/Math.cos((double)Neighbor.normalizeAngle(angle-t.neighbors.get(i).transitionIn_a)));
+					}
+				} else if (t.neighbors.get(i).transitionIn_a < t.neighbors.get(i).angle_a) {
+					if ((angle > t.neighbors.get(i).transitionIn_a && angle < t.neighbors.get(i).angle_a) && transitioningIn) {
+						radius = (float)(Constants.trajRadius/Math.cos((double)Neighbor.normalizeAngle(angle-t.neighbors.get(i).transitionIn_a)));
+					}
+				}
+				
+				// Checking to see if robot is with transitioningOut range of the trajectory and swapping trajectories if so.
+				if (t.neighbors.get(i).angle_a > t.neighbors.get(i).transitionOut_a) {	// Checking to see if transitionIn range crosses over 0/2pi radian line
+					if ((angle > t.neighbors.get(i).angle_a || angle < t.neighbors.get(i).transitionOut_a) && transitioningIn) {
+						transitioningIn = false;
+						transitioningOut = true;
+						// changing angle before changing neighbors
+						angle = Neighbor.normalizeAngle(t.neighbors.get(i).angle_b-(Neighbor.normalizeAngle(angle-t.neighbors.get(i).angle_a)));
+						t = t.neighbors.get(i).traj_b;
+						
+					}
+					if ((angle > t.neighbors.get(i).angle_a || angle < t.neighbors.get(i).transitionOut_a) && transitioningOut) {
+						radius = (float)(Constants.trajRadius/Math.cos((double)Neighbor.normalizeAngle(t.neighbors.get(i).transitionOut_a-angle)));
+					} else if (transitioningOut) {
+						transitioningOut = false;
+					}
+				} else if (t.neighbors.get(i).angle_a < t.neighbors.get(i).transitionOut_a) {
+					if ((angle > t.neighbors.get(i).transitionIn_a && angle < t.neighbors.get(i).angle_a) && transitioningIn) {
+						transitioningIn = false;
+						transitioningOut = true;
+						// changing angle before changing neighbors
+						angle = Neighbor.normalizeAngle(t.neighbors.get(i).angle_b-(Neighbor.normalizeAngle(angle-t.neighbors.get(i).angle_a)));
+						t = t.neighbors.get(i).traj_b;
+					}
+					if ((angle > t.neighbors.get(i).angle_a && angle < t.neighbors.get(i).transitionOut_a) && transitioningOut) {
+						radius = (float)(Constants.trajRadius/Math.cos((double)Neighbor.normalizeAngle(t.neighbors.get(i).transitionOut_a-angle)));
+					} else if (transitioningOut) {
+						transitioningOut = false;
+					}
+				}
+				
+				
+			}
+		}
 	}
 	
 	int getID() {
@@ -65,4 +144,5 @@ public class Robot {
 		result = (float)(this.getTrajectory().getX() + radius * Math.sin((double)angle));
 		return result;
 	}
+	
 }

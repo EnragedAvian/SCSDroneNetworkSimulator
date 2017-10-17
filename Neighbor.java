@@ -3,6 +3,8 @@
 import java.lang.Math;
 
 public class Neighbor {
+	Trajectory traj_a;
+	Trajectory traj_b;
 	int trajID_a;	// IDs of the specific trajectories
 	int trajID_b;
 	int trajDir_a;	// Directions of the specific trajectories
@@ -19,6 +21,9 @@ public class Neighbor {
 	// Rework specific values held, these are just placeholder for now
 	
 	Neighbor(Trajectory a, Trajectory b) {
+		traj_a = a;
+		traj_b = b;
+		
 		trajID_a = a.getID();
 		trajID_b = b.getID();
 		
@@ -78,14 +83,16 @@ public class Neighbor {
 		
 	}
 	
-	float normalizeAngle(float angle) {	// Function which places an angle between range of 0-2pi.
+	static float normalizeAngle(float angle) {	// Function which places an angle between range of 0-2pi.
 		float newAngle = angle;
 		while(newAngle>2*Math.PI) {	// Making sure that angle_a is within the range of 0-2pi (decrementing)
-			angle_a -= (float)(2*Math.PI);
+			newAngle -= (float)(2*Math.PI);
 		}
 		while(newAngle<2*Math.PI) {	// Making sure that angle_a is within the range of 0-2pi (incrementing)
-			angle_a += (float)(2*Math.PI);
+			newAngle += (float)(2*Math.PI);
 		}
 		return newAngle;
 	}
+	
+	
 }
