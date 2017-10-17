@@ -14,10 +14,8 @@ public class Neighbor {
 	float detectIn_b;
 	float transitionIn_a;	// Beginning transition angle for trajectories
 	float transitionIn_b;
-	float transitionOut_a;	// Midway transition point for trajectories, point at where the robot switches trajectories
+	float transitionOut_a;	// Ending point for transitions, opposite of the transitionin angle
 	float transitionOut_b;
-	float transitionEnd_a;	// Ending transition point
-	float transitionEnd_b;
 	// Rework specific values held, these are just placeholder for now
 	
 	Neighbor(Trajectory a, Trajectory b) {
@@ -55,7 +53,7 @@ public class Neighbor {
 		if (trajDir_a == 1) {
 			detectIn_a = angle_a - baseDetect;
 			detectIn_b = angle_b + baseDetect;
-		} else if (trajDir_a == 1) {
+		} else if (trajDir_a == -1) {
 			detectIn_a = angle_a + baseDetect;
 			detectIn_b = angle_b - baseDetect;
 		}
@@ -63,8 +61,20 @@ public class Neighbor {
 		detectIn_a = normalizeAngle(detectIn_a);
 		detectIn_b = normalizeAngle(detectIn_b);  
 		
-		// math determining the transitionIn angle for both a and b
-		float baseTransition;	// defining base angle for transitions 
+		// math for determining the transitionIn and transitionOut angles for both trajectories.
+		float baseTransition;
+		baseTransition = (float)Math.acos((double)(2*Constants.trajRadius/distance));
+		if (trajDir_a == 1) {
+			transitionIn_a = angle_a - baseTransition;
+			transitionOut_a = angle_a + baseTransition;
+			transitionIn_b = angle_b + baseTransition;
+			transitionOut_b = angle_b - baseTransition;
+		} else if (trajDir_a == -1) {
+			transitionIn_a = angle_a + baseTransition;
+			transitionOut_a = angle_a - baseTransition;
+			transitionIn_b = angle_b - baseTransition;
+			transitionOut_b = angle_b + baseTransition;
+		}
 		
 	}
 	
