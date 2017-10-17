@@ -68,7 +68,7 @@ public class Window extends JFrame implements ActionListener{
 		if(e.getSource() == buttons.addTraj){
 			if(tList.size() == 0)
 			{
-				Trajectory t = new Trajectory(0,0,0);
+				Trajectory t = new Trajectory(0,0);
 				tList.add(t);
 			}
 			JTextField aField = new JTextField(5);
@@ -95,10 +95,10 @@ public class Window extends JFrame implements ActionListener{
 				String temp1 = aField.getText();
 				String temp2 = bField.getText();
 				int ang = Integer.parseInt(temp1);
-				Trajectory t = new Trajectory(0,0,ang);
+				Trajectory t = new Trajectory(0,0);
 				tList.add(t);
 			}
-			
+			repaint();
 		}
 		if(e.getSource() == buttons.autofill){
 			
@@ -128,10 +128,9 @@ public class Window extends JFrame implements ActionListener{
 				String temp1 = aField.getText();
 				String temp2 = bField.getText();
 				int ang = Integer.parseInt(temp1);
-				Trajectory t = new Trajectory(0,0,ang);
+				Trajectory t = new Trajectory(0,0);
 				tList.add(t);
 			}
-			
 		}
 		if(e.getSource() == buttons.removeEdges){
 			

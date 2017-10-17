@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 
 public class DrawPanel extends JPanel {
 	private List<Trajectory> trajList = new ArrayList();
+	private Graphics g;
 	
 	DrawPanel (List<Trajectory> t) {
 		trajList = t;
@@ -36,7 +37,7 @@ public class DrawPanel extends JPanel {
 	    //Make next trajectories
 	    if(trajList.size() > 2){
 	    	Trajectory traj = trajList.get(0);
-	    	g.drawOval((int)(getWidth()/2 + Math.cos(Math.toRadians(traj.getAng())) * distBetweenTraj), (int)(getHeight()/2 + Math.sin(Math.toRadians(trajList.get(0).getAng())) * distBetweenTraj), (int)(getWidth()/10), (int)(getWidth()/10));
+	    	g.drawOval((int)(getWidth()/2 + Math.cos(Math.toRadians(45)) * distBetweenTraj), (int)(getHeight()/2 + Math.sin(Math.toRadians(45)) * distBetweenTraj), (int)(getWidth()/10), (int)(getWidth()/10));
 	    }
 	    
 	    //Make grid
@@ -48,5 +49,10 @@ public class DrawPanel extends JPanel {
 	    //Drawing Trajectories
 	    
 	    //Drawing Robots
+	}
+	
+	public void refresh()
+	{
+		paintComponent(g);
 	}
 }
