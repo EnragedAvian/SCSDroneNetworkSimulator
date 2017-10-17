@@ -15,6 +15,36 @@ public class DrawPanel extends JPanel {
 	DrawPanel (List<Trajectory> t) {
 		trajList = t;
 	}
+	
+	public void createDrone(Graphics g) {
+		// add drone to arraylist
+		// redraw arraylist
+	}
+	
+	public void autoFillDrones(Graphics g) {
+		
+	}
+	 
+	
+	//public void createTraj(Graphics g) {
+		
+	//}
+	
+	public void createGrid(Graphics g) {
+		//super.paintComponent(g);
+		
+		int radius = getWidth()/10;
+	    int distBetweenTraj = getWidth()/100;
+		
+		g.drawOval((int)(getWidth()/2 - getWidth()/20), (int)(getHeight()/2 - radius), radius, radius);
+		g.drawOval((int)(getWidth()/2 - getWidth()/20)+200, (int)(getHeight()/2 - radius)+200, radius, radius);
+		g.drawOval((int)(getWidth()/2 - getWidth()/20)-200, (int)(getHeight()/2 - radius)-200, radius, radius);
+		
+	}
+	
+	
+	
+	
 	 
 	//@Override
 	public void paintComponent(Graphics g) {

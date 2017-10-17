@@ -66,10 +66,15 @@ public class Window extends JFrame implements ActionListener{
 			
 		}
 		if(e.getSource() == buttons.addTraj){
+			// add drone to arraylist
+			// call redraw in drawPanel
+			
+			
 			if(tList.size() == 0)
 			{
-				Trajectory t = new Trajectory(0,0);
-				tList.add(t);
+				draw.createGrid(getGraphics());
+				//Trajectory t = new Trajectory(0,0);
+				//tList.add(t);
 			}
 			JTextField aField = new JTextField(5);
 			JTextField bField = new JTextField(5);
