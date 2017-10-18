@@ -27,7 +27,7 @@ public class Window extends JFrame implements ActionListener{
 	public Window(){
 		buttons = new ButtonPanel();
 		menu = new MenuBar();
-		draw = new DrawPanel(tList);
+		draw = new DrawPanel();
 		
 		//add menu bar
 		setJMenuBar(menu);
@@ -44,7 +44,6 @@ public class Window extends JFrame implements ActionListener{
 		setDefaultCloseOperation(EXIT_ON_CLOSE); //terminate program when closed
 		setVisible(true);
 		setTitle("Drone Simulator");
-		
 		
 		buttons.addDrone.addActionListener(this);
 		buttons.addTraj.addActionListener(this);
@@ -65,87 +64,32 @@ public class Window extends JFrame implements ActionListener{
 		if(e.getSource() == buttons.addDrone){
 			
 		}
+		
 		if(e.getSource() == buttons.addTraj){
 			// add drone to arraylist
 			// call redraw in drawPanel
-			
-			
-			if(tList.size() == 0)
-			{
-				draw.createGrid(getGraphics());
-				//Trajectory t = new Trajectory(0,0);
-				//tList.add(t);
-			}
-			JTextField aField = new JTextField(5);
-			JTextField bField = new JTextField(5);
-
-			JPanel myPanel = new JPanel();
-			myPanel.setLayout(new BoxLayout(myPanel, BoxLayout.Y_AXIS));
-
-			myPanel.add(new JLabel("Enter Angle:"));
-			myPanel.add(aField);
-
-			myPanel.add(Box.createVerticalStrut(15));
-
-			myPanel.add(new JLabel("Trajectory's ID:"));
-			myPanel.add(bField);
-
-			myPanel.add(Box.createVerticalStrut(15));
-			
-			int result = JOptionPane.showConfirmDialog(null, myPanel, " Enter Values For New SCS Simulation", JOptionPane.OK_CANCEL_OPTION);
-			Trajectory existingTraj = null;
-			int tempInt = 0;
-			
-			if (result == JOptionPane.OK_OPTION) {
-				String temp1 = aField.getText();
-				String temp2 = bField.getText();
-				int ang = Integer.parseInt(temp1);
-				Trajectory t = new Trajectory(0,0);
-				tList.add(t);
-			}
-			repaint();
 		}
+		
 		if(e.getSource() == buttons.autofill){
 			
 		}
+		
 		if(e.getSource() == buttons.autoGrid){
-			JTextField aField = new JTextField(5);
-			JTextField bField = new JTextField(5);
-
-			JPanel myPanel = new JPanel();
-			myPanel.setLayout(new BoxLayout(myPanel, BoxLayout.Y_AXIS));
-
-			myPanel.add(new JLabel("Enter number of rows:"));
-			myPanel.add(aField);
-
-			myPanel.add(Box.createVerticalStrut(15));
-
-			myPanel.add(new JLabel("Enter number of columns:"));
-			myPanel.add(bField);
-
-			myPanel.add(Box.createVerticalStrut(15));
-			
-			int result = JOptionPane.showConfirmDialog(null, myPanel, " Enter Values For New SCS Simulation", JOptionPane.OK_CANCEL_OPTION);
-			Trajectory existingTraj = null;
-			int tempInt = 0;
-			
-			if (result == JOptionPane.OK_OPTION) {
-				String temp1 = aField.getText();
-				String temp2 = bField.getText();
-				int ang = Integer.parseInt(temp1);
-				Trajectory t = new Trajectory(0,0);
-				tList.add(t);
-			}
+			draw.createGrid(getGraphics());
 		}
+		
 		if(e.getSource() == buttons.removeEdges){
 			
 		}
+		
 		if(e.getSource() == buttons.removeTraj){
 			
 		}
+		
 		if(e.getSource() == buttons.showEdges){
 			
 		}
+		
 		if(e.getSource() == buttons.start){
 			
 		}
@@ -153,12 +97,15 @@ public class Window extends JFrame implements ActionListener{
 		if(e.getSource() == menu.load){
 			//see line 960 in ScreenWindow of old sim
 		}
+		
 		if(e.getSource() == menu.newGraph){
 			
 		}
+		
 		if(e.getSource() == menu.save){
 			//see line 906 in ScreenWindow of old sim
 		}
+		
 	}
 
 
