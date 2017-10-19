@@ -89,7 +89,8 @@ public class Window extends JFrame implements ActionListener{
 		}
 		
 		if(e.getSource() == buttons.removeTraj){
-			
+			draw.removeTraj();
+			repaint();
 		}
 		
 		if(e.getSource() == buttons.showEdges){

@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -38,7 +39,10 @@ public class DrawPanel extends JPanel {
 		int y = getHeight()/2;
 		
 		//Hardcoded radius and distBetweenTraj values
-		radius = 100;
+		//if radius isn't already set - keeps a consistent radius
+		if(radius == 0){
+			radius = 100;
+		}
 		distBetweenTraj = 20;
 		
 		//Adds first trajectory to list once
@@ -131,7 +135,7 @@ public class DrawPanel extends JPanel {
 	    
 	    Trajectory t;
 	    //Assures space for menu
-	    int distanceX = 350;
+	    int distanceX = 100;
 	    int distanceY = 100;
 	    
 	    //Makes each trajectory
@@ -144,6 +148,23 @@ public class DrawPanel extends JPanel {
 	    	}
 	    }
 	}
+	
+	public void removeTraj(){
+		//Input Box
+		JTextField aField = new JTextField(5);
+		JPanel input = new JPanel();
+		input.setLayout(new BoxLayout(input, BoxLayout.Y_AXIS));
+
+		input.add(new JLabel("Enter trajectory ID for removal"));
+		input.add(aField);
+
+		int result = JOptionPane.showConfirmDialog(null, input, "Remove Trajectory", JOptionPane.OK_CANCEL_OPTION);
+		if (result == JOptionPane.OK_OPTION) {
+			String temp1 = aField.getText();
+			trajList.remove(Integer.parseInt(temp1) - 1);
+		}
+		
+	}
 	 
 	@Override
 	public void paintComponent(Graphics g) {
@@ -152,7 +173,7 @@ public class DrawPanel extends JPanel {
 	    g.drawString("Drone Simulator", 50, 50);
 	    
 	    float originalRadius = radius;
-	    radius = radius*Math.min(getHeight(), getWidth())/750;
+	    radius = radius*Math.min(getHeight(), getWidth())/700;
 	    
 	    //Draws each trajectory
 	    for(Trajectory n : trajList)
@@ -166,6 +187,7 @@ public class DrawPanel extends JPanel {
 	
 	public void clear(){
 		trajList.clear();
+		radius = 0;
 		repaint();
 	}
 }
