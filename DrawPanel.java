@@ -31,12 +31,18 @@ public class DrawPanel extends JPanel {
 	}
 	
 	public void createTraj(Graphics g) {
-	//	if(tList.size() == 0)
+		//Initial trajectory coordinates
+		int x = getWidth()/2 + 200;
+		int y = getHeight()/2;
+		
+		Trajectory t = new Trajectory(x, y);
+		//Adds first trajectory to list once
+		if(trajList.size() == 0)
 		{
-		//	draw.createGrid(getGraphics());
-			//Trajectory t = new Trajectory(0,0);
-			//tList.add(t);
+			trajList.add(t);
 		}
+		
+		//Input Box
 		JTextField aField = new JTextField(5);
 		JTextField bField = new JTextField(5);
 
@@ -53,21 +59,38 @@ public class DrawPanel extends JPanel {
 
 		myPanel.add(Box.createVerticalStrut(15));
 		
-		int result = JOptionPane.showConfirmDialog(null, myPanel, " Enter Values For New SCS Simulation", JOptionPane.OK_CANCEL_OPTION);
-		Trajectory existingTraj = null;
-		int tempInt = 0;
+		int result = JOptionPane.showConfirmDialog(null, myPanel, "Enter Values For New Trajectory", JOptionPane.OK_CANCEL_OPTION);
+		
+		double ang = 0;
+		int id = 0;
 		
 		if (result == JOptionPane.OK_OPTION) {
 			String temp1 = aField.getText();
 			String temp2 = bField.getText();
-			int ang = Integer.parseInt(temp1);
-			Trajectory t = new Trajectory(0,0);
-		//	tList.add(t);
+			//Gets angle and id(for traj to add on to)
+			ang = Double.parseDouble(temp1);
+			id = Integer.parseInt(temp2);
 		}
-		repaint();
+		
+		//Hardcoded radius and distBetweenTraj values
+		int radius = 100;
+		int distBetweenTraj = 20;
+		
+		//Creates next trajectory
+		float distX = (float)(trajList.get(id).getX() + Math.cos(Math.toRadians(ang)) * (radius + distBetweenTraj));
+		float distY = (float)(trajList.get(id).getY() - Math.sin(Math.toRadians(ang)) * (radius + distBetweenTraj));
+		Trajectory traj = new Trajectory(distX, distY);
+		trajList.add(traj);
+		
+		//Draws Trajectories
+	    for(Trajectory n : trajList)
+	    {
+	    	g.drawOval((int)(n.getX()), (int)(n.getY()), radius, radius);
+	    }
 	}
 	
 	public void createGrid(Graphics g) {
+		//Input Box
 		JTextField aField = new JTextField(5);
 		JTextField bField = new JTextField(5);
 
@@ -84,7 +107,7 @@ public class DrawPanel extends JPanel {
 
 		myPanel.add(Box.createVerticalStrut(15));
 		
-		int result = JOptionPane.showConfirmDialog(null, myPanel, " Enter Values For New SCS Simulation", JOptionPane.OK_CANCEL_OPTION);
+		int result = JOptionPane.showConfirmDialog(null, myPanel, "Enter Values For Grid", JOptionPane.OK_CANCEL_OPTION);
 		
 		int rows = 0;
 		int cols = 0;
@@ -92,11 +115,14 @@ public class DrawPanel extends JPanel {
 		if (result == JOptionPane.OK_OPTION) {
 			String temp1 = aField.getText();
 			String temp2 = bField.getText();
+			//Gets rows and columns
 			rows = Integer.parseInt(temp1);
 			cols = Integer.parseInt(temp2);
 		}
 		
+		//Sets initial radius
 		int radius = 10;
+		//Gets largest size the radius should be
 		if(rows > cols)
 		{
 			radius = (getWidth() - 300)/rows;
@@ -107,8 +133,11 @@ public class DrawPanel extends JPanel {
 	    int distBetweenTraj = getWidth()/70;
 	    
 	    Trajectory t;
+	    //Assures space for menu
 	    int distanceX = 400;
 	    int distanceY = 100;
+	    
+	    //Makes each trajectory
 	    for(int r = 0; r < rows; r++)
 	    {
 	    	for(int c = 0; c < cols; c++)
@@ -118,6 +147,7 @@ public class DrawPanel extends JPanel {
 	    	}
 	    }
 		
+	    //Draws each trajectory
 	    for(Trajectory traj : trajList)
 	    {
 	    	g.drawOval((int)(traj.getX()), (int)(traj.getY()), radius, radius);
@@ -131,32 +161,6 @@ public class DrawPanel extends JPanel {
 	    
 	    //Graphics2D g2 = ( Graphics2D ) g; // cast g to Graphics2D  
 
-	   //Make Trajectories
-	    //Trees
-	    //Make initial Trajectory
-	    int radius = getWidth()/10;
-	    int distBetweenTraj = getWidth()/100;
-	    if(trajList.size() > 0)
-	    {
-	    	g.drawOval((int)(getWidth()/2 - getWidth()/20), (int)(getHeight()/2 - radius), radius, radius);
-	    	//g.drawOval((int)(getWidth()/2 + Math.cos(Math.toRadians(180)) * distBetweenTraj), (int)(getHeight()/2 + Math.sin(Math.toRadians(180) * distBetweenTraj)), (int)(getWidth()/10), (int)(getWidth()/10));
-	//    	trajList.add(new Trajectory((float)(getWidth()/2 - getWidth()/20), (float)(getHeight()/2 - radius)));
-	    }
-	    //Make next trajectories
-	    if(trajList.size() > 2){
-	    	Trajectory traj = trajList.get(0);
-	    	g.drawOval((int)(getWidth()/2 + Math.cos(Math.toRadians(45)) * distBetweenTraj), (int)(getHeight()/2 + Math.sin(Math.toRadians(45)) * distBetweenTraj), (int)(getWidth()/10), (int)(getWidth()/10));
-	    }
-	    
-	    //Make grid
-	    
-	    
-	    //Make Robots
-	    
-	    
-	    //Drawing Trajectories
-	    
-	    //Drawing Robots
 	}
 
 }
