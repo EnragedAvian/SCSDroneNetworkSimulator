@@ -84,12 +84,6 @@ public class DrawPanel extends JPanel {
 			Trajectory traj = new Trajectory(distX, distY, trajList.size() + 1);
 			trajList.add(traj);
 		}			
-		//Draws Trajectories
-	    for(Trajectory n : trajList)
-	    {
-	    	g.drawOval((int)(n.getX()), (int)(n.getY()), (int)radius, (int)radius);
-	    	g.drawString("" + n.getID(), (int)(n.getX() + radius/2), (int)(n.getY() + radius/2));
-	    }
 	}
 	
 	public void createGrid(Graphics g) {
@@ -149,19 +143,20 @@ public class DrawPanel extends JPanel {
 	    		trajList.add(t);
 	    	}
 	    }
-		
-	    //Draws each trajectory
-	    for(Trajectory n : trajList)
-	    {
-	    	g.drawOval((int)(n.getX()), (int)(n.getY()), (int)radius, (int)radius);
-	    	g.drawString("" + n.getID(), (int)(n.getX() + radius/2), (int)(n.getY() + radius/2));
-	    }
 	}
 	 
 	@Override
 	public void paintComponent(Graphics g) {
 	    super.paintComponent( g ); // call superclass's paintComponent
 	    //Graphics2D g2 = ( Graphics2D ) g; // cast g to Graphics2D  
+	    g.drawString("Drone Simulator", 50, 50);
+	    
+	    //Draws each trajectory
+	    for(Trajectory n : trajList)
+	    {
+	    	g.drawOval((int)(n.getX()), (int)(n.getY()), (int)radius, (int)radius);
+	    	g.drawString("" + n.getID(), (int)(n.getX() + radius/2), (int)(n.getY() + radius/2));
+	    }
 	}
 	
 	public void clear(){

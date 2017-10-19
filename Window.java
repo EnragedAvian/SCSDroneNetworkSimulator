@@ -71,6 +71,7 @@ public class Window extends JFrame implements ActionListener{
 			// add drone to arraylist
 			// call redraw in drawPanel
 			draw.createTraj(getGraphics());
+			repaint();
 		}
 		
 		if(e.getSource() == buttons.autofill){
@@ -80,6 +81,7 @@ public class Window extends JFrame implements ActionListener{
 		if(e.getSource() == buttons.autoGrid){
 			draw.clear();
 			draw.createGrid(getGraphics());
+			repaint();
 		}
 		
 		if(e.getSource() == buttons.removeEdges){
