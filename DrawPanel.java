@@ -79,8 +79,8 @@ public class DrawPanel extends JPanel {
 			}
 			
 			//Creates next trajectory
-			float distX = (float)(trajList.get(id).getX() + Math.cos(Math.toRadians(ang)) * (radius + distBetweenTraj));
-			float distY = (float)(trajList.get(id).getY() - Math.sin(Math.toRadians(ang)) * (radius + distBetweenTraj));
+			float distX = (float)(trajList.get(id - 1).getX() + Math.cos(Math.toRadians(ang)) * (radius + distBetweenTraj));
+			float distY = (float)(trajList.get(id - 1).getY() - Math.sin(Math.toRadians(ang)) * (radius + distBetweenTraj));
 			Trajectory traj = new Trajectory(distX, distY, trajList.size() + 1);
 			trajList.add(traj);
 		}			
@@ -151,12 +151,17 @@ public class DrawPanel extends JPanel {
 	    //Graphics2D g2 = ( Graphics2D ) g; // cast g to Graphics2D  
 	    g.drawString("Drone Simulator", 50, 50);
 	    
+	    float originalRadius = radius;
+	    radius = radius*Math.min(getHeight(), getWidth())/750;
+	    
 	    //Draws each trajectory
 	    for(Trajectory n : trajList)
 	    {
 	    	g.drawOval((int)(n.getX()), (int)(n.getY()), (int)radius, (int)radius);
 	    	g.drawString("" + n.getID(), (int)(n.getX() + radius/2), (int)(n.getY() + radius/2));
 	    }
+	    
+	    radius = originalRadius;
 	}
 	
 	public void clear(){
