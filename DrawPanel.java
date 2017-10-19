@@ -41,10 +41,10 @@ public class DrawPanel extends JPanel {
 		radius = 100;
 		distBetweenTraj = 20;
 		
-		Trajectory t = new Trajectory(x, y);
 		//Adds first trajectory to list once
 		if(trajList.size() == 0)
 		{
+			Trajectory t = new Trajectory(x, y, 1);
 			trajList.add(t);
 		}
 		else{
@@ -81,13 +81,14 @@ public class DrawPanel extends JPanel {
 			//Creates next trajectory
 			float distX = (float)(trajList.get(id).getX() + Math.cos(Math.toRadians(ang)) * (radius + distBetweenTraj));
 			float distY = (float)(trajList.get(id).getY() - Math.sin(Math.toRadians(ang)) * (radius + distBetweenTraj));
-			Trajectory traj = new Trajectory(distX, distY);
+			Trajectory traj = new Trajectory(distX, distY, trajList.size() + 1);
 			trajList.add(traj);
 		}			
 		//Draws Trajectories
 	    for(Trajectory n : trajList)
 	    {
 	    	g.drawOval((int)(n.getX()), (int)(n.getY()), (int)radius, (int)radius);
+	    	g.drawString("" + n.getID(), (int)(n.getX() + radius/2), (int)(n.getY() + radius/2));
 	    }
 	}
 	
@@ -144,15 +145,16 @@ public class DrawPanel extends JPanel {
 	    {
 	    	for(int c = 0; c < cols; c++)
 	    	{
-	    		t = new Trajectory(distanceX + (radius * r) + (distBetweenTraj * r), distanceY + (radius * c) + (distBetweenTraj * c));
+	    		t = new Trajectory(distanceX + (radius * r) + (distBetweenTraj * r), distanceY + (radius * c) + (distBetweenTraj * c), trajList.size() + 1);
 	    		trajList.add(t);
 	    	}
 	    }
 		
 	    //Draws each trajectory
-	    for(Trajectory traj : trajList)
+	    for(Trajectory n : trajList)
 	    {
-	    	g.drawOval((int)(traj.getX()), (int)(traj.getY()), (int)radius, (int)radius);
+	    	g.drawOval((int)(n.getX()), (int)(n.getY()), (int)radius, (int)radius);
+	    	g.drawString("" + n.getID(), (int)(n.getX() + radius/2), (int)(n.getY() + radius/2));
 	    }
 	}
 	 

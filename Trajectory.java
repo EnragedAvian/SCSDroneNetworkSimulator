@@ -20,10 +20,11 @@ public class Trajectory {
 		}
 	}*/
 	
-	public Trajectory(float xCoord, float yCoord) {
+	public Trajectory(float xCoord, float yCoord, int id) {
 		x = xCoord;
 		y = yCoord;
-		trajID = trajectories.size() + 1;
+		//trajID = trajectories.size() + 1;
+		trajID = id;
 		
 		if (trajectories.size() == 0) {
 			direction = 1;
