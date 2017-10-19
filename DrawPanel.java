@@ -16,7 +16,7 @@ import javax.swing.JTextField;
 public class DrawPanel extends JPanel {
 	private List<Trajectory> trajList = new ArrayList();
 	private Graphics g;
-	private int radius;
+	private float radius;
 	private int distBetweenTraj;
 	
 	DrawPanel () {
@@ -87,7 +87,7 @@ public class DrawPanel extends JPanel {
 		//Draws Trajectories
 	    for(Trajectory n : trajList)
 	    {
-	    	g.drawOval((int)(n.getX()), (int)(n.getY()), radius, radius);
+	    	g.drawOval((int)(n.getX()), (int)(n.getY()), (int)radius, (int)radius);
 	    }
 	}
 	
@@ -127,16 +127,16 @@ public class DrawPanel extends JPanel {
 		//Gets largest size the radius should be
 		if(rows > cols)
 		{
-			radius = (getWidth() - 300)/rows;
+			radius = (getWidth() - 500)/rows;
 		}
 		else
-			radius = (getHeight() - 200)/cols;
+			radius = (getHeight() - 250)/cols;
 		
-	    int distBetweenTraj = getWidth()/70;
+	    int distBetweenTraj = getWidth()/120;
 	    
 	    Trajectory t;
 	    //Assures space for menu
-	    int distanceX = 400;
+	    int distanceX = 350;
 	    int distanceY = 100;
 	    
 	    //Makes each trajectory
@@ -152,7 +152,7 @@ public class DrawPanel extends JPanel {
 	    //Draws each trajectory
 	    for(Trajectory traj : trajList)
 	    {
-	    	g.drawOval((int)(traj.getX()), (int)(traj.getY()), radius, radius);
+	    	g.drawOval((int)(traj.getX()), (int)(traj.getY()), (int)radius, (int)radius);
 	    }
 	}
 	 
