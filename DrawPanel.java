@@ -16,6 +16,8 @@ import javax.swing.JTextField;
 public class DrawPanel extends JPanel {
 	private List<Trajectory> trajList = new ArrayList();
 	private Graphics g;
+	private int radius;
+	private int distBetweenTraj;
 	
 	DrawPanel () {
 	}
@@ -35,53 +37,53 @@ public class DrawPanel extends JPanel {
 		int x = getWidth()/2 + 200;
 		int y = getHeight()/2;
 		
+		//Hardcoded radius and distBetweenTraj values
+		radius = 100;
+		distBetweenTraj = 20;
+		
 		Trajectory t = new Trajectory(x, y);
 		//Adds first trajectory to list once
 		if(trajList.size() == 0)
 		{
 			trajList.add(t);
 		}
-		
-		//Input Box
-		JTextField aField = new JTextField(5);
-		JTextField bField = new JTextField(5);
-
-		JPanel myPanel = new JPanel();
-		myPanel.setLayout(new BoxLayout(myPanel, BoxLayout.Y_AXIS));
-
-		myPanel.add(new JLabel("Enter Angle:"));
-		myPanel.add(aField);
-
-		myPanel.add(Box.createVerticalStrut(15));
-
-		myPanel.add(new JLabel("Trajectory's ID:"));
-		myPanel.add(bField);
-
-		myPanel.add(Box.createVerticalStrut(15));
-		
-		int result = JOptionPane.showConfirmDialog(null, myPanel, "Enter Values For New Trajectory", JOptionPane.OK_CANCEL_OPTION);
-		
-		double ang = 0;
-		int id = 0;
-		
-		if (result == JOptionPane.OK_OPTION) {
-			String temp1 = aField.getText();
-			String temp2 = bField.getText();
-			//Gets angle and id(for traj to add on to)
-			ang = Double.parseDouble(temp1);
-			id = Integer.parseInt(temp2);
-		}
-		
-		//Hardcoded radius and distBetweenTraj values
-		int radius = 100;
-		int distBetweenTraj = 20;
-		
-		//Creates next trajectory
-		float distX = (float)(trajList.get(id).getX() + Math.cos(Math.toRadians(ang)) * (radius + distBetweenTraj));
-		float distY = (float)(trajList.get(id).getY() - Math.sin(Math.toRadians(ang)) * (radius + distBetweenTraj));
-		Trajectory traj = new Trajectory(distX, distY);
-		trajList.add(traj);
-		
+		else{
+			//Input Box
+			JTextField aField = new JTextField(5);
+			JTextField bField = new JTextField(5);
+	
+			JPanel input = new JPanel();
+			input.setLayout(new BoxLayout(input, BoxLayout.Y_AXIS));
+	
+			input.add(new JLabel("Enter Angle:"));
+			input.add(aField);
+	
+			input.add(Box.createVerticalStrut(15));
+	
+			input.add(new JLabel("Relative to trajectory with ID:"));
+			input.add(bField);
+	
+			input.add(Box.createVerticalStrut(15));
+			
+			int result = JOptionPane.showConfirmDialog(null, input, "Enter Values For New Trajectory", JOptionPane.OK_CANCEL_OPTION);
+			
+			double ang = 0;
+			int id = 0;
+			
+			if (result == JOptionPane.OK_OPTION) {
+				String temp1 = aField.getText();
+				String temp2 = bField.getText();
+				//Gets angle and id(for traj to add on to)
+				ang = Double.parseDouble(temp1);
+				id = Integer.parseInt(temp2);
+			}
+			
+			//Creates next trajectory
+			float distX = (float)(trajList.get(id).getX() + Math.cos(Math.toRadians(ang)) * (radius + distBetweenTraj));
+			float distY = (float)(trajList.get(id).getY() - Math.sin(Math.toRadians(ang)) * (radius + distBetweenTraj));
+			Trajectory traj = new Trajectory(distX, distY);
+			trajList.add(traj);
+		}			
 		//Draws Trajectories
 	    for(Trajectory n : trajList)
 	    {
@@ -94,20 +96,20 @@ public class DrawPanel extends JPanel {
 		JTextField aField = new JTextField(5);
 		JTextField bField = new JTextField(5);
 
-		JPanel myPanel = new JPanel();
-		myPanel.setLayout(new BoxLayout(myPanel, BoxLayout.Y_AXIS));
+		JPanel input = new JPanel();
+		input.setLayout(new BoxLayout(input, BoxLayout.Y_AXIS));
 
-		myPanel.add(new JLabel("Enter number of rows:"));
-		myPanel.add(aField);
+		input.add(new JLabel("Enter number of rows:"));
+		input.add(aField);
 
-		myPanel.add(Box.createVerticalStrut(15));
+		input.add(Box.createVerticalStrut(15));
 
-		myPanel.add(new JLabel("Enter number of columns:"));
-		myPanel.add(bField);
+		input.add(new JLabel("Enter number of columns:"));
+		input.add(bField);
 
-		myPanel.add(Box.createVerticalStrut(15));
+		input.add(Box.createVerticalStrut(15));
 		
-		int result = JOptionPane.showConfirmDialog(null, myPanel, "Enter Values For Grid", JOptionPane.OK_CANCEL_OPTION);
+		int result = JOptionPane.showConfirmDialog(null, input, "Enter Values For Grid", JOptionPane.OK_CANCEL_OPTION);
 		
 		int rows = 0;
 		int cols = 0;
@@ -121,7 +123,7 @@ public class DrawPanel extends JPanel {
 		}
 		
 		//Sets initial radius
-		int radius = 10;
+		radius = 10;
 		//Gets largest size the radius should be
 		if(rows > cols)
 		{
@@ -151,16 +153,17 @@ public class DrawPanel extends JPanel {
 	    for(Trajectory traj : trajList)
 	    {
 	    	g.drawOval((int)(traj.getX()), (int)(traj.getY()), radius, radius);
-	    }		
+	    }
 	}
 	 
-	//@Override
+	@Override
 	public void paintComponent(Graphics g) {
-
-	    super.paintComponent( g ); // call superclass's paintComponent  
-	    
+	    super.paintComponent( g ); // call superclass's paintComponent
 	    //Graphics2D g2 = ( Graphics2D ) g; // cast g to Graphics2D  
-
 	}
-
+	
+	public void clear(){
+		trajList.clear();
+		repaint();
+	}
 }

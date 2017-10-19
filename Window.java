@@ -7,6 +7,8 @@ import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,6 +78,7 @@ public class Window extends JFrame implements ActionListener{
 		}
 		
 		if(e.getSource() == buttons.autoGrid){
+			draw.clear();
 			draw.createGrid(getGraphics());
 		}
 		
@@ -100,7 +103,7 @@ public class Window extends JFrame implements ActionListener{
 		}
 		
 		if(e.getSource() == menu.newGraph){
-			
+			draw.clear();
 		}
 		
 		if(e.getSource() == menu.save){
@@ -108,6 +111,5 @@ public class Window extends JFrame implements ActionListener{
 		}
 		
 	}
-
 
 }
