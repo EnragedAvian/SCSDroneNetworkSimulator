@@ -16,6 +16,7 @@ import javax.swing.JTextField;
 
 public class DrawPanel extends JPanel {
 	private List<Trajectory> trajList = new ArrayList();
+	private List<Robot> droneList = new ArrayList();
 	private Graphics g;
 	private float radius;
 	private int distBetweenTraj;
@@ -126,10 +127,10 @@ public class DrawPanel extends JPanel {
 		//Gets largest size the radius should be
 		if(rows > cols)
 		{
-			radius = (getWidth() - 500)/rows;
+			radius = (getWidth() - 600)/rows;
 		}
 		else
-			radius = (getHeight() - 250)/cols;
+			radius = (getHeight() - 400)/cols;
 		
 	    int distBetweenTraj = getWidth()/120;
 	    
@@ -143,7 +144,7 @@ public class DrawPanel extends JPanel {
 	    {
 	    	for(int c = 0; c < cols; c++)
 	    	{
-	    		t = new Trajectory(distanceX + (radius * r) + (distBetweenTraj * r), distanceY + (radius * c) + (distBetweenTraj * c), trajList.size() + 1);
+	    		t = new Trajectory(distanceX + (radius * 2 * r) + (distBetweenTraj * r), distanceY + (radius * 2 * c) + (distBetweenTraj * c), trajList.size() + 1);
 	    		trajList.add(t);
 	    	}
 	    }
@@ -173,7 +174,18 @@ public class DrawPanel extends JPanel {
 	    g.drawString("Drone Simulator", 50, 50);
 	    
 	    float originalRadius = radius;
-	    radius = radius*Math.min(getHeight(), getWidth())/700;
+	    float originalX = 0;
+	    float originalY = 0;
+	    
+	    radius = radius*Math.min(getHeight(), getWidth())/500;
+	    
+	    for(Trajectory n : trajList)
+	    {
+	    	originalX = n.getX();
+	    	originalY = n.getY();
+	    	n.setX(n.getX() - (getWidth() - 300));
+	    	n.setY(n.getY() - (getHeight() - 300));
+	    }
 	    
 	    //Draws each trajectory
 	    for(Trajectory n : trajList)
@@ -183,6 +195,7 @@ public class DrawPanel extends JPanel {
 	    }
 	    
 	    radius = originalRadius;
+	    
 	}
 	
 	public void clear(){

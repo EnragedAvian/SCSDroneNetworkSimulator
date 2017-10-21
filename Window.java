@@ -64,7 +64,8 @@ public class Window extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if(e.getSource() == buttons.addDrone){
-			
+			draw.createDrone(getGraphics());
+			repaint();
 		}
 		
 		if(e.getSource() == buttons.addTraj){

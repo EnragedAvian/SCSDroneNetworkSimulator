@@ -70,6 +70,14 @@ public class Trajectory {
 		return y;
 	}
 	
+	float setX(float newX) {
+		return newX;
+	}
+	
+	float setY(float newY) {
+		return newY;
+	}
+	
 	int getDir() {
 		return direction;
 	}
