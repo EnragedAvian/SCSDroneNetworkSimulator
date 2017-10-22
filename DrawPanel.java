@@ -16,6 +16,7 @@ import javax.swing.JTextField;
 
 public class DrawPanel extends JPanel {
 	private List<Trajectory> trajList = new ArrayList();
+	private List<Trajectory> tempTrajList = new ArrayList();
 	private List<Robot> droneList = new ArrayList();
 	private Graphics g;
 	private float radius;
@@ -132,7 +133,7 @@ public class DrawPanel extends JPanel {
 		else
 			radius = (getHeight() - 400)/cols;
 		
-	    int distBetweenTraj = getWidth()/120;
+	    int distBetweenTraj = getWidth()/200;
 	    
 	    Trajectory t;
 	    //Assures space for menu
@@ -146,6 +147,7 @@ public class DrawPanel extends JPanel {
 	    	{
 	    		t = new Trajectory(distanceX + (radius * 2 * r) + (distBetweenTraj * r), distanceY + (radius * 2 * c) + (distBetweenTraj * c), trajList.size() + 1);
 	    		trajList.add(t);
+	    		tempTrajList.add(t);
 	    	}
 	    }
 	}
@@ -174,21 +176,17 @@ public class DrawPanel extends JPanel {
 	    g.drawString("Drone Simulator", 50, 50);
 	    
 	    float originalRadius = radius;
-	    float originalX = 0;
-	    float originalY = 0;
 	    
-	    radius = radius*Math.min(getHeight(), getWidth())/500;
+	    radius = radius*Math.min(getHeight(), getWidth())/700;
 	    
-	    for(Trajectory n : trajList)
+	    for(Trajectory n : tempTrajList)
 	    {
-	    	originalX = n.getX();
-	    	originalY = n.getY();
-	    	n.setX(n.getX() - (getWidth() - 300));
-	    	n.setY(n.getY() - (getHeight() - 300));
+	    	n.setX(n.getX() - 500);
+	    	n.setY(n.getY() - 500);
 	    }
 	    
 	    //Draws each trajectory
-	    for(Trajectory n : trajList)
+	    for(Trajectory n : tempTrajList)
 	    {
 	    	g.drawOval((int)(n.getX()), (int)(n.getY()), (int)radius, (int)radius);
 	    	g.drawString("" + n.getID(), (int)(n.getX() + radius/2), (int)(n.getY() + radius/2));
@@ -196,6 +194,11 @@ public class DrawPanel extends JPanel {
 	    
 	    radius = originalRadius;
 	    
+	    for(int i = 0; i < tempTrajList.size(); i++)
+	    {
+	    	tempTrajList.get(i).setX(trajList.get(i).getX());
+	    	tempTrajList.get(i).setY(trajList.get(i).getY());
+	    }
 	}
 	
 	public void clear(){

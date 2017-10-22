@@ -70,12 +70,12 @@ public class Trajectory {
 		return y;
 	}
 	
-	float setX(float newX) {
-		return newX;
+	void setX(float newX) {
+		x = newX;
 	}
 	
-	float setY(float newY) {
-		return newY;
+	void setY(float newY) {
+		y = newY;
 	}
 	
 	int getDir() {
