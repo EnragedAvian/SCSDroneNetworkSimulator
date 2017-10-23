@@ -12,7 +12,7 @@ public class Trajectory {
 	private float radius = 10;
 	
 	
-	public ArrayList<Trajectory> trajectories = new ArrayList();
+	public ArrayList<Trajectory> trajectories = new ArrayList<Trajectory>();
 	
 	/*public void buildNetwork() {
 		for (int i = 0; i<trajectories.size(); i++) {
@@ -26,11 +26,14 @@ public class Trajectory {
 		//trajID = trajectories.size() + 1;
 		trajID = id;
 		
+		// Initializing the neighbors arraylist
+		neighbors = new ArrayList<Neighbor>();
+		
 		if (trajectories.size() == 0) {
 			direction = 1;
 		} else {
 			//Knowingly creating issues that can be fixed later. Namely, that there is no checking to see if trajectories are too close to one another
-			ArrayList<Trajectory> compareTrajectories = new ArrayList();
+			ArrayList<Trajectory> compareTrajectories = new ArrayList<Trajectory>();
 			for (int i = 0; i<trajectories.size(); i++) {
 				if (trajectories.get(i).getID()!=trajID) {
 					if (inRange(trajectories.get(i))) {

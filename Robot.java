@@ -14,7 +14,7 @@ public class Robot {
 	private boolean checked;
 	private boolean swapped;
 	
-	public ArrayList<Robot> robots;
+	public ArrayList<Robot> robots = new ArrayList<Robot>();
 	
 	Robot(Trajectory traj, float ang){
 		angle = ang;
