@@ -210,6 +210,10 @@ public class Robot {
 		return ID;
 	}
 	
+	float getAngle(){
+		return angle;
+	}
+	
 	Trajectory getTrajectory() {
 		return t;
 	}

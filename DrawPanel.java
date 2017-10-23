@@ -26,8 +26,37 @@ public class DrawPanel extends JPanel {
 	}
 	
 	public void createDrone(Graphics g) {
-		// add drone to arraylist
-		// redraw arraylist
+		JTextField aField = new JTextField(5);
+		JTextField bField = new JTextField(5);
+
+		JPanel input = new JPanel();
+		input.setLayout(new BoxLayout(input, BoxLayout.Y_AXIS));
+
+		input.add(new JLabel("Enter Angle:"));
+		input.add(aField);
+
+		input.add(Box.createVerticalStrut(15));
+
+		input.add(new JLabel("On trajectory:"));
+		input.add(bField);
+
+		input.add(Box.createVerticalStrut(15));
+		
+		int result = JOptionPane.showConfirmDialog(null, input, "Enter Values For New Trajectory", JOptionPane.OK_CANCEL_OPTION);
+		
+		float ang = 0;
+		int id = 0;
+		
+		if (result == JOptionPane.OK_OPTION) {
+			String temp1 = aField.getText();
+			String temp2 = bField.getText();
+			//Gets angle and id
+			ang = Float.parseFloat(temp1);
+			id = Integer.parseInt(temp2);
+		}
+		
+		Robot r = new Robot(trajList.get(id - 1), ang);
+		droneList.add(r);
 		
 	}
 	
@@ -128,16 +157,16 @@ public class DrawPanel extends JPanel {
 		//Gets largest size the radius should be
 		if(rows > cols)
 		{
-			radius = (getWidth() - 600)/rows;
+			radius = (getWidth() - 650)/rows;
 		}
 		else
-			radius = (getHeight() - 400)/cols;
+			radius = (getHeight() - 420)/cols;
 		
-	    int distBetweenTraj = getWidth()/200;
+	    int distBetweenTraj = getWidth()/20;
 	    
 	    Trajectory t;
 	    //Assures space for menu
-	    int distanceX = 100;
+	    int distanceX = 50;
 	    int distanceY = 100;
 	    
 	    //Makes each trajectory
@@ -145,7 +174,8 @@ public class DrawPanel extends JPanel {
 	    {
 	    	for(int c = 0; c < cols; c++)
 	    	{
-	    		t = new Trajectory(distanceX + (radius * 2 * r) + (distBetweenTraj * r), distanceY + (radius * 2 * c) + (distBetweenTraj * c), trajList.size() + 1);
+	    		//+ (distBetweenTraj * r)  + (distBetweenTraj * c)
+	    		t = new Trajectory(distanceX + (radius * 2 * r) - (distBetweenTraj * r), distanceY + (radius * 2 * c) - (distBetweenTraj * c), trajList.size() + 1);
 	    		trajList.add(t);
 	    		tempTrajList.add(t);
 	    	}
@@ -181,8 +211,8 @@ public class DrawPanel extends JPanel {
 	    
 	    for(Trajectory n : tempTrajList)
 	    {
-	    	n.setX(n.getX() - 500);
-	    	n.setY(n.getY() - 500);
+	    	n.setX(n.getX() - getWidth()/200); //getWidth() / 4 + n.getX()
+	    	n.setY(n.getY() - getHeight()/200);
 	    }
 	    
 	    //Draws each trajectory
@@ -192,6 +222,16 @@ public class DrawPanel extends JPanel {
 	    	g.drawString("" + n.getID(), (int)(n.getX() + radius/2), (int)(n.getY() + radius/2));
 	    }
 	    
+	    //Draws each drone
+	    for(Robot r : droneList)
+	    {
+	    	g.setColor(Color.BLACK);
+	    	g.drawOval((int)(r.getTrajectory().getX() + radius*Math.cos(Math.toRadians(r.getAngle()))), (int)(r.getTrajectory().getY() - radius*Math.sin(Math.toRadians(r.getAngle()))), (int)radius, (int)radius);
+	    }
+	    
+	    //sample
+	    //g.drawOval(getWidth() / 2, getHeight() / 2, (int)radius, (int)radius);
+	    
 	    radius = originalRadius;
 	    
 	    for(int i = 0; i < tempTrajList.size(); i++)
@@ -199,10 +239,12 @@ public class DrawPanel extends JPanel {
 	    	tempTrajList.get(i).setX(trajList.get(i).getX());
 	    	tempTrajList.get(i).setY(trajList.get(i).getY());
 	    }
+	    
 	}
 	
 	public void clear(){
 		trajList.clear();
+		tempTrajList.clear();
 		radius = 0;
 		repaint();
 	}
