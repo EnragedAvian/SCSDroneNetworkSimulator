@@ -19,7 +19,7 @@ public class DrawPanel extends JPanel {
 	private List<Trajectory> tempTrajList = new ArrayList();
 	private List<Robot> droneList = new ArrayList();
 	private Graphics g;
-	private float radius;
+	private float diam;
 	private int distBetweenTraj;
 	
 	DrawPanel () {
@@ -71,16 +71,16 @@ public class DrawPanel extends JPanel {
 		
 		//Hardcoded radius and distBetweenTraj values
 		//if radius isn't already set - keeps a consistent radius
-		if(radius == 0){
-			radius = 100;
+		if(diam == 0){
+			diam = 100;
 		}
-		distBetweenTraj = 20;
+		distBetweenTraj = 50;
 		
 		//Adds first trajectory to list once
 		if(trajList.size() == 0)
 		{
-			Trajectory t = new Trajectory(x, y, 1);
-			trajList.add(t);
+			trajList.add(new Trajectory(x, y, 1));
+			tempTrajList.add(new Trajectory(x, y, 1));
 		}
 		else{
 			//Input Box
@@ -114,10 +114,10 @@ public class DrawPanel extends JPanel {
 			}
 			
 			//Creates next trajectory
-			float distX = (float)(trajList.get(id - 1).getX() + Math.cos(Math.toRadians(ang)) * (radius + distBetweenTraj));
-			float distY = (float)(trajList.get(id - 1).getY() - Math.sin(Math.toRadians(ang)) * (radius + distBetweenTraj));
-			Trajectory traj = new Trajectory(distX, distY, trajList.size() + 1);
-			trajList.add(traj);
+			float distX = (float)(trajList.get(id - 1).getX() + Math.cos(Math.toRadians(ang)) * (diam + distBetweenTraj));
+			float distY = (float)(trajList.get(id - 1).getY() - Math.sin(Math.toRadians(ang)) * (diam + distBetweenTraj));
+			trajList.add(new Trajectory(distX, distY, trajList.size()));
+			tempTrajList.add(new Trajectory(distX, distY, trajList.size()));
 		}			
 	}
 	
@@ -153,14 +153,14 @@ public class DrawPanel extends JPanel {
 		}
 		
 		//Sets initial radius
-		radius = 10;
+		diam = 10;
 		//Gets largest size the radius should be
 		if(rows > cols)
 		{
-			radius = (getWidth() - 650)/rows;
+			diam = (getWidth() - 650)/rows;
 		}
 		else
-			radius = (getHeight() - 420)/cols;
+			diam = (getHeight() - 420)/cols;
 		
 	    int distBetweenTraj = getWidth()/20;
 	    
@@ -175,9 +175,8 @@ public class DrawPanel extends JPanel {
 	    	for(int c = 0; c < cols; c++)
 	    	{
 	    		//+ (distBetweenTraj * r)  + (distBetweenTraj * c)
-	    		t = new Trajectory(distanceX + (radius * 2 * r) - (distBetweenTraj * r), distanceY + (radius * 2 * c) - (distBetweenTraj * c), trajList.size() + 1);
-	    		trajList.add(t);
-	    		tempTrajList.add(t);
+	    		trajList.add(new Trajectory(distanceX + (diam * 2 * r) - (distBetweenTraj * r), distanceY + (diam * 2 * c) - (distBetweenTraj * c), trajList.size()));
+	    		tempTrajList.add(new Trajectory(distanceX + (diam * 2 * r) - (distBetweenTraj * r), distanceY + (diam * 2 * c) - (distBetweenTraj * c), trajList.size()));
 	    	}
 	    }
 	}
@@ -205,9 +204,9 @@ public class DrawPanel extends JPanel {
 	    //Graphics2D g2 = ( Graphics2D ) g; // cast g to Graphics2D  
 	    g.drawString("Drone Simulator", 50, 50);
 	    
-	    float originalRadius = radius;
+	    float originalRadius = diam;
 	    
-	    radius = radius*Math.min(getHeight(), getWidth())/700;
+	    diam = diam*Math.min(getHeight(), getWidth())/700;
 	    
 	    for(Trajectory n : tempTrajList)
 	    {
@@ -218,21 +217,22 @@ public class DrawPanel extends JPanel {
 	    //Draws each trajectory
 	    for(Trajectory n : tempTrajList)
 	    {
-	    	g.drawOval((int)(n.getX()), (int)(n.getY()), (int)radius, (int)radius);
-	    	g.drawString("" + n.getID(), (int)(n.getX() + radius/2), (int)(n.getY() + radius/2));
+	    	g.drawOval((int)(n.getX()), (int)(n.getY()), (int)diam, (int)diam);
+	    	g.drawString("" + n.getID(), (int)(n.getX() + diam/2), (int)(n.getY() + diam/2));
 	    }
 	    
 	    //Draws each drone
 	    for(Robot r : droneList)
 	    {
 	    	g.setColor(Color.BLACK);
-	    	g.drawOval((int)(r.getTrajectory().getX() + radius*Math.cos(Math.toRadians(r.getAngle()))), (int)(r.getTrajectory().getY() - radius*Math.sin(Math.toRadians(r.getAngle()))), (int)radius, (int)radius);
+	    	//g.drawOval(getWidth() / 2, getHeight() / 2, 100, 100);
+	    	g.fillOval((int)(r.getTrajectory().getX() + diam/2*Math.cos(Math.toRadians(r.getAngle())) + diam/2 - 15), (int)(r.getTrajectory().getY() - diam/2*Math.sin(Math.toRadians(r.getAngle())) + diam/2 - 15), 30, 30);
 	    }
 	    
 	    //sample
 	    //g.drawOval(getWidth() / 2, getHeight() / 2, (int)radius, (int)radius);
 	    
-	    radius = originalRadius;
+	    diam = originalRadius;
 	    
 	    for(int i = 0; i < tempTrajList.size(); i++)
 	    {
@@ -245,7 +245,7 @@ public class DrawPanel extends JPanel {
 	public void clear(){
 		trajList.clear();
 		tempTrajList.clear();
-		radius = 0;
+		diam = 0;
 		repaint();
 	}
 }

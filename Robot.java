@@ -14,7 +14,7 @@ public class Robot {
 	private boolean checked;
 	private boolean swapped;
 	
-	public ArrayList<Robot> robots = new ArrayList<Robot>();
+	public ArrayList<Robot> robots;
 	
 	Robot(Trajectory traj, float ang){
 		angle = ang;
@@ -24,7 +24,7 @@ public class Robot {
 		transitioningIn = false;
 		transitioningOut = false;
 		radius = Constants.trajRadius;
-		robots.add(this);
+		//robots.add(this);
 	}
 	
 	boolean checkNeighbor(Trajectory traj) {	// Checks the range between robot and neighbor in specified trajectory
