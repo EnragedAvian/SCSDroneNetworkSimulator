@@ -212,7 +212,25 @@ public class DrawPanel extends JPanel {
 	@Override
 	public void paint(Graphics g) {
 		super.paint( g );
+		if (Constants.running) {
+    			for(Robot r: Robot.robots) {
+    				r.move();
+    			}
+    		
+    			for(Robot r: Robot.robots) {
+    				r.logic();
+    				repaint();
+    			}
+		}
 		
+		float pixelRatio;	// Creating the pixel ratio, which is the number of pixels divided by the number of units for the window size
+	    pixelRatio = (float)(Math.min(getHeight(), getWidth())/800.0);
+		
+	    for(Robot r: Robot.robots) {
+    			g.setColor(Color.BLACK);
+    			g.fillOval((int)(r.getX()*pixelRatio + getWidth()/2)-10, (int)((getHeight()/2 - r.getY()*pixelRatio))-10, 20, 20);
+	    }
+	    
 	}
 	
 	@Override
@@ -230,6 +248,7 @@ public class DrawPanel extends JPanel {
 	    			g.setColor(Color.BLUE);
 	    		}
 	    		g.drawOval((int)(n.getX()*pixelRatio + getWidth()/2 - Constants.trajRadius*pixelRatio), (int)(getHeight()/2 - n.getY()*pixelRatio - Constants.trajRadius*pixelRatio), (int)(Constants.trajRadius*2.0*pixelRatio), (int)(Constants.trajRadius*2.0*pixelRatio));
+	    		g.drawString("" + n.getID(), (int)(n.getX()*pixelRatio + getWidth()/2), (int)(getHeight()/2 - n.getY()*pixelRatio));
 	    }
 	    
 	    for(Robot r: Robot.robots) {
