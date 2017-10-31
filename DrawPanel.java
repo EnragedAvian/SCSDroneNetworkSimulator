@@ -176,8 +176,8 @@ public class DrawPanel extends JPanel {
 	    int distanceY = 100;
 	    */
 	    //Makes each trajectory
-		float anchorX = -(cols-1)*(Constants.trajRadius*2 + 30)/2;
-		float anchorY = -(rows-1)*(Constants.trajRadius*2 + 30)/2;
+		float anchorX = -(cols-1)*(Constants.trajRadius*2 + 20)/2;
+		float anchorY = -(rows-1)*(Constants.trajRadius*2 + 20)/2;
 		
 		
 	    for(int r = 0; r < rows; r++)
@@ -185,7 +185,7 @@ public class DrawPanel extends JPanel {
 	    	for(int c = 0; c < cols; c++)
 	    	{
 	    		//+ (distBetweenTraj * r)  + (distBetweenTraj * c)
-	    		new Trajectory(anchorX + c*(Constants.trajRadius*2 + 30), anchorY + r*(Constants.trajRadius*2 + 30));
+	    		new Trajectory(anchorX + c*(Constants.trajRadius*2 + 20), anchorY + r*(Constants.trajRadius*2 + 20));
 	    		//trajList.add(new Trajectory(distanceX + (diam * 2 * r) - (distBetweenTraj * r), distanceY + (diam * 2 * c) - (distBetweenTraj * c)));
 	    		//tempTrajList.add(new Trajectory(distanceX + (diam * 2 * r) - (distBetweenTraj * r), distanceY + (diam * 2 * c) - (distBetweenTraj * c)));
 	    	}
@@ -223,6 +223,10 @@ public class DrawPanel extends JPanel {
 	    
 	    for(Robot r: Robot.robots) {
 	    		r.move();
+	    }
+	    
+	    for(Robot r: Robot.robots) {
+	    		r.logic();
 	    }
 	    
 	    float pixelRatio;	// Creating the pixel ratio, which is the number of pixels divided by the number of units for the window size
