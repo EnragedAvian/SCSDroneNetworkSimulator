@@ -32,7 +32,7 @@ public class DrawPanel extends JPanel {
 		JPanel input = new JPanel();
 		input.setLayout(new BoxLayout(input, BoxLayout.Y_AXIS));
 
-		input.add(new JLabel("Enter Angle:"));
+		input.add(new JLabel("Enter Angle in Degrees:"));
 		input.add(aField);
 
 		input.add(Box.createVerticalStrut(15));
@@ -55,8 +55,10 @@ public class DrawPanel extends JPanel {
 			id = Integer.parseInt(temp2);
 		}
 		
-		Robot r = new Robot(trajList.get(id - 1), ang);
-		droneList.add(r);
+		new Robot(Trajectory.trajectories.get(id-1), (float)(Math.toRadians(ang)));
+		
+		//Robot r = new Robot(trajList.get(id - 1), ang);
+		//droneList.add(r);
 		
 	}
 	
@@ -71,16 +73,17 @@ public class DrawPanel extends JPanel {
 		
 		//Hardcoded radius and distBetweenTraj values
 		//if radius isn't already set - keeps a consistent radius
-		if(diam == 0){
+		/*if(diam == 0){
 			diam = 100;
 		}
-		distBetweenTraj = 50;
+		distBetweenTraj = 50;*/
 		
 		//Adds first trajectory to list once
-		if(trajList.size() == 0)
+		if(Trajectory.trajectories.size() == 0)
 		{
-			trajList.add(new Trajectory(0, 0));
-			tempTrajList.add(new Trajectory(0, 0));
+			new Trajectory(0,0);
+			//trajList.add(new Trajectory(0, 0));
+			//tempTrajList.add(new Trajectory(0, 0));
 		}
 		else{
 			//Input Box
@@ -90,7 +93,7 @@ public class DrawPanel extends JPanel {
 			JPanel input = new JPanel();
 			input.setLayout(new BoxLayout(input, BoxLayout.Y_AXIS));
 	
-			input.add(new JLabel("Enter Angle:"));
+			input.add(new JLabel("Enter Angle in Degrees:"));
 			input.add(aField);
 	
 			input.add(Box.createVerticalStrut(15));
@@ -114,10 +117,13 @@ public class DrawPanel extends JPanel {
 			}
 			
 			//Creates next trajectory
-			float distX = (float)(trajList.get(id - 1).getX() + Math.cos(Math.toRadians(ang)) * (diam + distBetweenTraj));
-			float distY = (float)(trajList.get(id - 1).getY() - Math.sin(Math.toRadians(ang)) * (diam + distBetweenTraj));
-			trajList.add(new Trajectory(distX, distY));
-			tempTrajList.add(new Trajectory(distX, distY));
+			float distX = (float)(Math.cos(Math.toRadians(ang)) * (Constants.trajRadius*2 + 30));
+			float distY = (float)(Math.sin(Math.toRadians(ang)) * (Constants.trajRadius*2 + 30));
+			float newX = Trajectory.trajectories.get(id-1).getX() + distX;
+			float newY = Trajectory.trajectories.get(id-1).getY() + distY;
+			new Trajectory(newX, newY);
+			//trajList.add(new Trajectory(distX, distY));
+			//tempTrajList.add(new Trajectory(distX, distY));
 		}			
 	}
 	
@@ -151,7 +157,7 @@ public class DrawPanel extends JPanel {
 			rows = Integer.parseInt(temp1);
 			cols = Integer.parseInt(temp2);
 		}
-		
+		/*
 		//Sets initial radius
 		diam = 10;
 		//Gets largest size the radius should be
@@ -168,15 +174,20 @@ public class DrawPanel extends JPanel {
 	    //Assures space for menu
 	    int distanceX = 50;
 	    int distanceY = 100;
-	    
+	    */
 	    //Makes each trajectory
+		float anchorX = -(cols-1)*(Constants.trajRadius*2 + 30)/2;
+		float anchorY = -(rows-1)*(Constants.trajRadius*2 + 30)/2;
+		
+		
 	    for(int r = 0; r < rows; r++)
 	    {
 	    	for(int c = 0; c < cols; c++)
 	    	{
 	    		//+ (distBetweenTraj * r)  + (distBetweenTraj * c)
-	    		trajList.add(new Trajectory(distanceX + (diam * 2 * r) - (distBetweenTraj * r), distanceY + (diam * 2 * c) - (distBetweenTraj * c)));
-	    		tempTrajList.add(new Trajectory(distanceX + (diam * 2 * r) - (distBetweenTraj * r), distanceY + (diam * 2 * c) - (distBetweenTraj * c)));
+	    		new Trajectory(anchorX + c*(Constants.trajRadius*2 + 30), anchorY + r*(Constants.trajRadius*2 + 30));
+	    		//trajList.add(new Trajectory(distanceX + (diam * 2 * r) - (distBetweenTraj * r), distanceY + (diam * 2 * c) - (distBetweenTraj * c)));
+	    		//tempTrajList.add(new Trajectory(distanceX + (diam * 2 * r) - (distBetweenTraj * r), distanceY + (diam * 2 * c) - (distBetweenTraj * c)));
 	    	}
 	    }
 	}
@@ -199,21 +210,36 @@ public class DrawPanel extends JPanel {
 	}
 	 
 	@Override
+	public void paint(Graphics g) {
+		super.paint( g );
+		
+	}
+	
+	@Override
 	public void paintComponent(Graphics g) {
 	    super.paintComponent( g ); // call superclass's paintComponent
 	    //Graphics2D g2 = ( Graphics2D ) g; // cast g to Graphics2D  
 	    g.drawString("Drone Simulator", 50, 50);
 	    
+	    for(Robot r: Robot.robots) {
+	    		r.move();
+	    }
+	    
 	    float pixelRatio;	// Creating the pixel ratio, which is the number of pixels divided by the number of units for the window size
 	    pixelRatio = (float)(Math.min(getHeight(), getWidth())/800.0);
 	    
 	    for(Trajectory n : Trajectory.trajectories) {
+	    		if (n.getDir() == 1) {
+	    			g.setColor(Color.RED);
+	    		} else {
+	    			g.setColor(Color.BLUE);
+	    		}
 	    		g.drawOval((int)(n.getX()*pixelRatio + getWidth()/2 - Constants.trajRadius*pixelRatio), (int)(getHeight()/2 - n.getY()*pixelRatio - Constants.trajRadius*pixelRatio), (int)(Constants.trajRadius*2.0*pixelRatio), (int)(Constants.trajRadius*2.0*pixelRatio));
 	    }
 	    
 	    for(Robot r: Robot.robots) {
 	    		g.setColor(Color.BLACK);
-	    		g.fillOval((int)(r.getX()*pixelRatio + getWidth()/2), (int)((getHeight()/2 - r.getY()*pixelRatio)), 15, 15);
+	    		g.fillOval((int)(r.getX()*pixelRatio + getWidth()/2)-10, (int)((getHeight()/2 - r.getY()*pixelRatio))-10, 20, 20);
 	    }
 	    
 	    
