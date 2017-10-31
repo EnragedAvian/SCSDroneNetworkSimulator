@@ -61,13 +61,13 @@ public class DrawPanel extends JPanel {
 	}
 	
 	public void autoFillDrones(Graphics g) {
-		
+		// TODO Create function that automatically fills trajectories, likely involves creation of master list of neighbor classes.
 	}
 	
 	public void createTraj(Graphics g) {
 		//Initial trajectory coordinates
-		int x = getWidth()/2 + 200;
-		int y = getHeight()/2;
+		//int x = getWidth()/2 + 200;
+		//int y = getHeight()/2;
 		
 		//Hardcoded radius and distBetweenTraj values
 		//if radius isn't already set - keeps a consistent radius
@@ -79,8 +79,8 @@ public class DrawPanel extends JPanel {
 		//Adds first trajectory to list once
 		if(trajList.size() == 0)
 		{
-			trajList.add(new Trajectory(x, y, 1));
-			tempTrajList.add(new Trajectory(x, y, 1));
+			trajList.add(new Trajectory(0, 0));
+			tempTrajList.add(new Trajectory(0, 0));
 		}
 		else{
 			//Input Box
@@ -116,8 +116,8 @@ public class DrawPanel extends JPanel {
 			//Creates next trajectory
 			float distX = (float)(trajList.get(id - 1).getX() + Math.cos(Math.toRadians(ang)) * (diam + distBetweenTraj));
 			float distY = (float)(trajList.get(id - 1).getY() - Math.sin(Math.toRadians(ang)) * (diam + distBetweenTraj));
-			trajList.add(new Trajectory(distX, distY, trajList.size()));
-			tempTrajList.add(new Trajectory(distX, distY, trajList.size()));
+			trajList.add(new Trajectory(distX, distY));
+			tempTrajList.add(new Trajectory(distX, distY));
 		}			
 	}
 	
@@ -175,8 +175,8 @@ public class DrawPanel extends JPanel {
 	    	for(int c = 0; c < cols; c++)
 	    	{
 	    		//+ (distBetweenTraj * r)  + (distBetweenTraj * c)
-	    		trajList.add(new Trajectory(distanceX + (diam * 2 * r) - (distBetweenTraj * r), distanceY + (diam * 2 * c) - (distBetweenTraj * c), trajList.size()));
-	    		tempTrajList.add(new Trajectory(distanceX + (diam * 2 * r) - (distBetweenTraj * r), distanceY + (diam * 2 * c) - (distBetweenTraj * c), trajList.size()));
+	    		trajList.add(new Trajectory(distanceX + (diam * 2 * r) - (distBetweenTraj * r), distanceY + (diam * 2 * c) - (distBetweenTraj * c)));
+	    		tempTrajList.add(new Trajectory(distanceX + (diam * 2 * r) - (distBetweenTraj * r), distanceY + (diam * 2 * c) - (distBetweenTraj * c)));
 	    	}
 	    }
 	}
@@ -204,7 +204,22 @@ public class DrawPanel extends JPanel {
 	    //Graphics2D g2 = ( Graphics2D ) g; // cast g to Graphics2D  
 	    g.drawString("Drone Simulator", 50, 50);
 	    
-	    float originalRadius = diam;
+	    float pixelRatio;	// Creating the pixel ratio, which is the number of pixels divided by the number of units for the window size
+	    pixelRatio = (float)(Math.min(getHeight(), getWidth())/800.0);
+	    
+	    for(Trajectory n : Trajectory.trajectories) {
+	    		g.drawOval((int)(n.getX()*pixelRatio + getWidth()/2 - Constants.trajRadius*pixelRatio), (int)(getHeight()/2 - n.getY()*pixelRatio - Constants.trajRadius*pixelRatio), (int)(Constants.trajRadius*2.0*pixelRatio), (int)(Constants.trajRadius*2.0*pixelRatio));
+	    }
+	    
+	    for(Robot r: Robot.robots) {
+	    		g.setColor(Color.BLACK);
+	    		g.fillOval((int)(r.getX()*pixelRatio + getWidth()/2), (int)((getHeight()/2 - r.getY()*pixelRatio)), 15, 15);
+	    }
+	    
+	    
+	    
+	    
+	    /*float originalRadius = diam;
 	    
 	    diam = diam*Math.min(getHeight(), getWidth())/700;
 	    
@@ -226,7 +241,7 @@ public class DrawPanel extends JPanel {
 	    {
 	    	g.setColor(Color.BLACK);
 	    	//g.drawOval(getWidth() / 2, getHeight() / 2, 100, 100);
-	    	g.fillOval((int)(r.getTrajectory().getX() + diam/2*Math.cos(Math.toRadians(r.getAngle())) + diam/2 - 15), (int)(r.getTrajectory().getY() - diam/2*Math.sin(Math.toRadians(r.getAngle())) + diam/2 - 15), 30, 30);
+	    	g.fillOval((int)(r.getX()), (int)(r.getTrajectory().getY() - diam/2*Math.sin(Math.toRadians(r.getAngle())) + diam/2 - 15), 30, 30);
 	    }
 	    
 	    //sample
@@ -238,7 +253,7 @@ public class DrawPanel extends JPanel {
 	    {
 	    	tempTrajList.get(i).setX(trajList.get(i).getX());
 	    	tempTrajList.get(i).setY(trajList.get(i).getY());
-	    }
+	    }*/
 	    
 	}
 	
