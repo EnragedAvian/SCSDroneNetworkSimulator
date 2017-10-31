@@ -99,7 +99,11 @@ public class Window extends JFrame implements ActionListener{
 		}
 		
 		if(e.getSource() == buttons.start){
-			
+			if (Constants.running) {
+				Constants.running = false;
+			} else {
+				Constants.running = true;
+			}
 		}
 
 		if(e.getSource() == menu.load){
