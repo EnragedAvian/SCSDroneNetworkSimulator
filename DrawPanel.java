@@ -223,6 +223,7 @@ public class DrawPanel extends JPanel {
 	    
 	    for(Robot r: Robot.robots) {
 	    		r.move();
+	    		repaint();
 	    }
 	    
 	    for(Robot r: Robot.robots) {
