@@ -289,8 +289,8 @@ public class DrawPanel extends JPanel {
 	}
 	
 	public void clear(){
-		trajList.clear();
-		tempTrajList.clear();
+		Robot.robots.clear();
+		Trajectory.trajectories.clear();
 		diam = 0;
 		repaint();
 	}
