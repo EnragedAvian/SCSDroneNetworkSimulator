@@ -33,7 +33,8 @@ public class ButtonPanel extends JPanel{
 		addDrone = new JButton("Add Drone");
 		autofill = new JButton("Autofill Drones");
 		showEdges = new JButton("Show Edges");
-		removeEdges = new JButton("Remove Edges");
+		removeEdges = new JButton("Hide Edges"); // rename to "Hide Edges" for the time being. If we want "Remove Edge" functionality, rename it back.
+		//removeEdges = new JButton("Remove Edges");
 		
 		//set panel to GridLayout
 		GridLayout layout = new GridLayout(4,2);
