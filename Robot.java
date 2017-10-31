@@ -52,12 +52,6 @@ public class Robot {
 			angle += Constants.robotSpeed;  // Incrementing robot angle by constant value per tick
 			angle = Constants.normalizeAngle(angle);  // normalizing angle so robot always falls within 0-2pi
 		}	
-		try {
-			Thread.sleep(5);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
   
 	void logic() {

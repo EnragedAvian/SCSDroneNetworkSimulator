@@ -100,6 +100,12 @@ public class Window extends JFrame implements ActionListener{
 		
 		if(e.getSource() == buttons.start){
 			
+			if(buttons.start.getText().equals("Start")){
+				buttons.start.setText("Stop");
+			}
+			else{
+				buttons.start.setText("Start");
+			}
 		}
 
 		if(e.getSource() == menu.load){

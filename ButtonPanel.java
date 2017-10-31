@@ -26,7 +26,7 @@ public class ButtonPanel extends JPanel{
 			e.printStackTrace();
 		}
 		
-		start = new JButton("Start/Stop");
+		start = new JButton("Start");
 		autoGrid = new JButton("Create Grid");
 		addTraj = new JButton("Add Trajectory");
 		removeTraj = new JButton("Remove Trajectory");
