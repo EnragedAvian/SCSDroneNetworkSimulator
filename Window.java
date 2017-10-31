@@ -99,12 +99,12 @@ public class Window extends JFrame implements ActionListener{
 		}
 		
 		if(e.getSource() == buttons.start){
-			
-			if(buttons.start.getText().equals("Start")){
-				buttons.start.setText("Stop");
-			}
-			else{
+			if (Constants.running) {
+				Constants.running = false;
 				buttons.start.setText("Start");
+			} else {
+				Constants.running = true;
+				buttons.start.setText("Stop");
 			}
 		}
 

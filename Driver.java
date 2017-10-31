@@ -2,7 +2,7 @@
 public class Driver {
 	public static void main(String args[]){
 		Window w = new Window();
-		while(true){
+		if (Constants.running) {
 			run();
 			try {
 				Thread.sleep(5);

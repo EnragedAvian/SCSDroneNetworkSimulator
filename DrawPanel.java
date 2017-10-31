@@ -220,7 +220,6 @@ public class DrawPanel extends JPanel {
 	    super.paintComponent( g ); // call superclass's paintComponent
 	    //Graphics2D g2 = ( Graphics2D ) g; // cast g to Graphics2D  
 	    g.drawString("Drone Simulator", 50, 50);
-	    
 	    float pixelRatio;	// Creating the pixel ratio, which is the number of pixels divided by the number of units for the window size
 	    pixelRatio = (float)(Math.min(getHeight(), getWidth())/800.0);
 	    
@@ -285,4 +284,6 @@ public class DrawPanel extends JPanel {
 		diam = 0;
 		repaint();
 	}
+	
+	
 }
