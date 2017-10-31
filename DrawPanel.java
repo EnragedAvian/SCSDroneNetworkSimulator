@@ -21,6 +21,7 @@ public class DrawPanel extends JPanel {
 	private Graphics g;
 	private float diam;
 	private int distBetweenTraj;
+	private boolean showEdges = false;
 	
 	DrawPanel () {
 	}
@@ -208,6 +209,14 @@ public class DrawPanel extends JPanel {
 		}
 		
 	}
+	
+	public void showEdges() {
+		showEdges = true;		
+	}
+	
+	public void removeEdges() {
+		showEdges = false;
+	}
 	 
 	@Override
 	public void paint(Graphics g) {
@@ -247,8 +256,16 @@ public class DrawPanel extends JPanel {
 	    		g.fillOval((int)(r.getX()*pixelRatio + getWidth()/2)-10, (int)((getHeight()/2 - r.getY()*pixelRatio))-10, 20, 20);
 	    }
 	    
-	    
-	    
+	    // show/hide edges
+	    if (showEdges) {
+	    	g.setColor(Color.BLACK);
+	    	for(Trajectory trajectory : Trajectory.trajectories) {
+	    		for(Neighbor neighbor : trajectory.neighbors) {
+	    			//System.out.println("TRAJ_A: " + neighbor.traj_a.getID() + " | TRAJ_B: " + neighbor.traj_b.getID());
+	    			g.drawLine((int)(neighbor.traj_a.getX()*pixelRatio + getWidth()/2), (int)(getHeight()/2 - neighbor.traj_a.getY()*pixelRatio), (int)(neighbor.traj_b.getX()*pixelRatio + getWidth()/2), (int)(getHeight()/2 - neighbor.traj_b.getY()*pixelRatio));
+	    		}
+			}
+	    }
 	    
 	    /*float originalRadius = diam;
 	    
