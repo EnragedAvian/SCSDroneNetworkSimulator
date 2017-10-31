@@ -1,4 +1,4 @@
-// Neighbor class contains a links between the graph of trajectories
+// Neighbor class contains a links between the graph of trajectories.
 
 import java.lang.Math;
 

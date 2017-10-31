@@ -1,4 +1,4 @@
-// Trajectory class which contains circular trajectory object
+// Trajectory class which contains circular trajectory object.
 
 import java.util.ArrayList;
 import java.lang.Math;

@@ -1,4 +1,4 @@
-//  Robot class which handles the creation and motion of robots on screen
+//  Robot class which handles the creation and motion of robots on screen.
 
 import java.util.ArrayList;
 import java.lang.Math;
