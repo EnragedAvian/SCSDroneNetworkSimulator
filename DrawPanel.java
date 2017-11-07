@@ -225,6 +225,20 @@ public class DrawPanel extends JPanel {
 		int result = JOptionPane.showConfirmDialog(null, input, "Remove Trajectory", JOptionPane.OK_CANCEL_OPTION);
 		if (result == JOptionPane.OK_OPTION) {
 			String temp1 = aField.getText();
+			int trajIndex = Integer.parseInt(temp1) - 1;
+			Trajectory selectedTraj = Trajectory.trajectories.get(trajIndex);
+			// get neighbors of trajectory that needs to removed
+			for (Neighbor n : selectedTraj.neighbors) {
+				System.out.println("Traj A: " + n.traj_a.getID()  + " | Traj B: " + n.traj_b.getID());
+				// remove the trajectory that wants to be removed from it's neighbors' neighbor arraylist
+				int trajbIndex = Trajectory.trajectories.indexOf(n.traj_b);
+				for (Neighbor neigh : Trajectory.trajectories.get(trajbIndex).neighbors) {
+					if (neigh.traj_b.equals(selectedTraj)) {
+						Trajectory.trajectories.get(trajbIndex).neighbors.remove(neigh);
+						break;
+					}
+				}
+			}
 			Trajectory.trajectories.remove(Integer.parseInt(temp1) - 1);
 		}
 		
