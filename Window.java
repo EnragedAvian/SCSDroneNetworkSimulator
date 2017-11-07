@@ -78,7 +78,8 @@ public class Window extends JFrame implements ActionListener{
 		}
 		
 		if(e.getSource() == buttons.autofill){
-			
+			draw.autoFillDrones(getGraphics());
+			repaint();
 		}
 		
 		if(e.getSource() == buttons.autoGrid){
