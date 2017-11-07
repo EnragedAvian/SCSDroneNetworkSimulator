@@ -32,6 +32,10 @@ public class Robot extends Thread {
 		radius = Constants.trajRadius;
 		robots.add(this);
 		threadName = "Robot " + ID;
+		
+		/*if (Constants.running) {
+			this.start();
+		}*/
 	}
   
 	boolean checkNeighbor(Trajectory traj) {  // Checks the range between robot and neighbor in specified trajectory
@@ -52,23 +56,28 @@ public class Robot extends Thread {
 		//return true;
 	}
   
-	public void run () {
+	/*public void run () {
 		try {
-			System.out.println("Moving robot " + ID);
-			move();
-			System.out.println("Logic robot " + ID);
-			logic();
-			Thread.sleep(5);
+			while (Constants.running) {
+				System.out.println("Moving robot " + ID);
+				move();
+				System.out.println("Logic robot " + ID);
+				logic();
+				Thread.sleep(5);
+			}
 		} catch (InterruptedException e) {
 			System.out.println("Error on thread " + threadName);
 		}
-	}
+	}*/
 	
 	void move() {
 		if (t.getDir() == 1) {
 			angle += Constants.robotSpeed;  // Incrementing robot angle by constant value per tick
 			angle = Constants.normalizeAngle(angle);  // normalizing angle so robot always falls within 0-2pi
-		}	
+		} else {
+			angle -= Constants.robotSpeed;
+			angle = Constants.normalizeAngle(angle);
+		}
 	}
   
 	void logic() {
@@ -142,8 +151,8 @@ public class Robot extends Thread {
     
     
 		if (t.getDir() == -1) {  // Checking direction of robot on trajectory, moving clockwise
-			angle -= Constants.robotSpeed;  // Incrementing robot angle by constant value per tick
-			angle = Constants.normalizeAngle(angle);  // normalizing angle so robot always falls within 0-2pi
+			
+			
 			rangeState = -1;
 			for (int i = 0; i < t.neighbors.size(); i++) {
 				// Creating temporary values for all the parameters of the neighbor class to aid with calculations later.
