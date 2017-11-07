@@ -225,7 +225,7 @@ public class DrawPanel extends JPanel {
 		int result = JOptionPane.showConfirmDialog(null, input, "Remove Trajectory", JOptionPane.OK_CANCEL_OPTION);
 		if (result == JOptionPane.OK_OPTION) {
 			String temp1 = aField.getText();
-			trajList.remove(Integer.parseInt(temp1) - 1);
+			Trajectory.trajectories.remove(Integer.parseInt(temp1) - 1);
 		}
 		
 	}
