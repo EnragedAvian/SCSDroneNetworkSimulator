@@ -3,8 +3,8 @@
 import java.lang.Math;
 
 public class Neighbor {
-	Trajectory traj_a;
-	Trajectory traj_b;
+	Trajectory traj_a; // current trajectory
+	Trajectory traj_b; // adjacent trajectory
 	int trajID_a;  // IDs of the specific trajectories
 	int trajID_b;
 	int trajDir_a;  // Directions of the specific trajectories
