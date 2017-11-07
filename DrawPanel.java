@@ -28,7 +28,7 @@ public class DrawPanel extends JPanel {
 	
 	DrawPanel () {
 		// Adding timer which controls the timing and movement of things within the program
-		Timer timer = new Timer(10, new ActionListener() {
+		Timer timer = new Timer(1000, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (Constants.running) {

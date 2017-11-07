@@ -9,6 +9,10 @@ public class Robot extends Thread {
 	private float radius;
 	private int ID;
 	private Neighbor checking;	// ID of the trajectory we want to be checking
+	
+	private Thread thread;
+	private String threadName;
+	
 	boolean transitioningIn;
 	boolean transitioningOut;
 	boolean detected;  // checks to see whether or not robot has been detected in desired range.
@@ -27,6 +31,7 @@ public class Robot extends Thread {
 		transitioningOut = false;
 		radius = Constants.trajRadius;
 		robots.add(this);
+		threadName = "Robot " + ID;
 	}
   
 	boolean checkNeighbor(Trajectory traj) {  // Checks the range between robot and neighbor in specified trajectory
@@ -48,8 +53,15 @@ public class Robot extends Thread {
 	}
   
 	public void run () {
-		move();
-		logic();
+		try {
+			System.out.println("Moving robot " + ID);
+			move();
+			System.out.println("Logic robot " + ID);
+			logic();
+			Thread.sleep(5);
+		} catch (InterruptedException e) {
+			System.out.println("Error on thread " + threadName);
+		}
 	}
 	
 	void move() {
