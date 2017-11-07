@@ -3,7 +3,7 @@
 import java.util.ArrayList;
 import java.lang.Math;
 
-public class Robot {
+public class Robot extends Thread {
 	private Trajectory t;
 	private float angle;
 	private float radius;
@@ -47,6 +47,11 @@ public class Robot {
 		//return true;
 	}
   
+	public void run () {
+		move();
+		logic();
+	}
+	
 	void move() {
 		if (t.getDir() == 1) {
 			angle += Constants.robotSpeed;  // Incrementing robot angle by constant value per tick

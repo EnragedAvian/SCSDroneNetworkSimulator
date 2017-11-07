@@ -33,12 +33,12 @@ public class DrawPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				if (Constants.running) {
 					for(Robot r: Robot.robots) {
-			    		r.move();
+			    		r.run();
 				    }
 				    
-				    for(Robot r: Robot.robots) {
-			    		r.logic();
-				    }
+				    //for(Robot r: Robot.robots) {
+			    		//r.logic();
+				    //}
 				}
 				repaint();
 			}

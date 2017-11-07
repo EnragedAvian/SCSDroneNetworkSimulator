@@ -3,7 +3,7 @@
 public class Constants {
 	public static float wifiRange = 50;
 	public static float trajRadius = 100;
-	public static float robotSpeed = (float)0.01;
+	public static float robotSpeed = (float)0.02;
 	public static boolean running = false;
   
 	public static float normalizeAngle(float angle) {  // Function which places an angle between range of 0-2pi. Replaced old one in Neighbor class
