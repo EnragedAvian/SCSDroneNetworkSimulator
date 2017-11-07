@@ -2,7 +2,7 @@
 public class Driver {
 	public static void main(String args[]){
 		Window w = new Window();
-		while(true){
+		/*while(true){
 			//TODO time based loop
 			
 				run();
@@ -14,11 +14,11 @@ public class Driver {
 				}
 				w.repaint();
 			
-		}
+		}*/
 		
 	}
 	
-	public static void run(){
+	/*public static void run(){
 		if (Constants.running) {
 			for(Robot r: Robot.robots) {
 	    		r.move();
@@ -28,5 +28,5 @@ public class Driver {
 	    		r.logic();
 		    }
 		}
-	}
+	}*/
 }

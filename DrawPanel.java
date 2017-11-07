@@ -3,6 +3,8 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.Timer;
 
 public class DrawPanel extends JPanel {
 	private List<Trajectory> trajList = new ArrayList();
@@ -24,6 +27,23 @@ public class DrawPanel extends JPanel {
 	private boolean showEdges = false;
 	
 	DrawPanel () {
+		// Adding timer which controls the timing and movement of things within the program
+		Timer timer = new Timer(10, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (Constants.running) {
+					for(Robot r: Robot.robots) {
+			    		r.move();
+				    }
+				    
+				    for(Robot r: Robot.robots) {
+			    		r.logic();
+				    }
+				}
+				repaint();
+			}
+		});
+		timer.start();
 	}
 	
 	public void createDrone(Graphics g) {
@@ -118,8 +138,8 @@ public class DrawPanel extends JPanel {
 			}
 			
 			//Creates next trajectory
-			float distX = (float)(Math.cos(Math.toRadians(ang)) * (Constants.trajRadius*2 + 30));
-			float distY = (float)(Math.sin(Math.toRadians(ang)) * (Constants.trajRadius*2 + 30));
+			float distX = (float)(Math.cos(Math.toRadians(ang)) * (Constants.trajRadius*2 + 20));
+			float distY = (float)(Math.sin(Math.toRadians(ang)) * (Constants.trajRadius*2 + 20));
 			float newX = Trajectory.trajectories.get(id-1).getX() + distX;
 			float newY = Trajectory.trajectories.get(id-1).getY() + distY;
 			new Trajectory(newX, newY);
@@ -221,7 +241,7 @@ public class DrawPanel extends JPanel {
 	@Override
 	public void paint(Graphics g) {
 		super.paint( g );
-		if (Constants.running) {
+		/*if (Constants.running) {
     			for(Robot r: Robot.robots) {
     				r.move();
     			}
@@ -230,7 +250,7 @@ public class DrawPanel extends JPanel {
     				r.logic();
     				repaint();
     			}
-		}
+		}*/
 		
 		float pixelRatio;	// Creating the pixel ratio, which is the number of pixels divided by the number of units for the window size
 	    pixelRatio = (float)(Math.min(getHeight(), getWidth())/800.0);
@@ -320,6 +340,5 @@ public class DrawPanel extends JPanel {
 		diam = 0;
 		repaint();
 	}
-	
 	
 }

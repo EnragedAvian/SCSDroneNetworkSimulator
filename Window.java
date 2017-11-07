@@ -19,6 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.Timer;
 
 public class Window extends JFrame implements ActionListener{
 	private ButtonPanel buttons;
@@ -59,6 +60,7 @@ public class Window extends JFrame implements ActionListener{
 		menu.load.addActionListener(this);
 		menu.newGraph.addActionListener(this);
 		menu.save.addActionListener(this);
+		
 	}
 	
 	public void actionPerformed(ActionEvent e) {
