@@ -277,7 +277,7 @@ public class DrawPanel extends JPanel {
 	    			g.setColor(Color.BLUE);
 	    		}
 	    		g.drawOval((int)(n.getX()*pixelRatio + getWidth()/2 - Constants.trajRadius*pixelRatio), (int)(getHeight()/2 - n.getY()*pixelRatio - Constants.trajRadius*pixelRatio), (int)(Constants.trajRadius*2.0*pixelRatio), (int)(Constants.trajRadius*2.0*pixelRatio));
-	    		g.drawString("" + n.getID(), (int)(n.getX()*pixelRatio + getWidth()/2), (int)(getHeight()/2 - n.getY()*pixelRatio));
+	    		g.drawString("" + (Trajectory.trajectories.indexOf(n)+1), (int)(n.getX()*pixelRatio + getWidth()/2), (int)(getHeight()/2 - n.getY()*pixelRatio));
 	    }
 	    
 	    for(Robot r: Robot.robots) {
