@@ -77,15 +77,11 @@ public class DrawPanel extends JPanel {
 		}
 		
 		new Robot(Trajectory.trajectories.get(id-1), (float)(Math.toRadians(ang)));
-		
-		//Robot r = new Robot(trajList.get(id - 1), ang);
-		//droneList.add(r);
-		
 	}
 	
 	public void autoFillDrones(Graphics g) {
 		JTextField aField = new JTextField(5);
-		JTextField bField = new JTextField(5);
+		//JTextField bField = new JTextField(5);
 
 		JPanel input = new JPanel();
 		input.setLayout(new BoxLayout(input, BoxLayout.Y_AXIS));
@@ -95,51 +91,51 @@ public class DrawPanel extends JPanel {
 
 		input.add(Box.createVerticalStrut(15));
 
-		input.add(new JLabel("On trajectory:"));
-		input.add(bField);
+		//input.add(new JLabel("On trajectory:"));
+		//input.add(bField);
 
-		input.add(Box.createVerticalStrut(15));
+		//input.add(Box.createVerticalStrut(15));
 		
 		int result = JOptionPane.showConfirmDialog(null, input, "Enter Values", JOptionPane.OK_CANCEL_OPTION);
 		
 		float ang = 0;
-		int id = 0;
+		//int id = 0;
 		
 		if (result == JOptionPane.OK_OPTION) {
 			String temp1 = aField.getText();
-			String temp2 = bField.getText();
+		//	String temp2 = bField.getText();
 			//Gets angle and id
 			ang = Float.parseFloat(temp1);
-			id = Integer.parseInt(temp2);
+		//	id = Integer.parseInt(temp2);
 		}
 		
 		//new Robot(Trajectory.trajectories.get(id-1), (float)(Math.toRadians(ang)));	
-		for(int i = 0; i < Trajectory.trajectories.size(); i++)
+		/*for(int i = 0; i < Trajectory.trajectories.size(); i++)
 		{
 			if(Trajectory.trajectories.get(i).getDir() == 1)
 				new Robot(Trajectory.trajectories.get(i), (float)(Math.toRadians(ang)));	
 			else
 				new Robot(Trajectory.trajectories.get(i), (float)(Math.toRadians(360 - ang)));	
-		}
-		for(int i = 0; i < Trajectory.trajectories.size(); i++)
+		}*/
+		new Robot(Trajectory.trajectories.get(0), (float)(Math.toRadians(ang)));
+		//Loop through each traj, get each neighbor, if has drone, move to next neighbor
+		Trajectory a = Trajectory.trajectories.get(0);
+		boolean hasBot = false;
+		for(int t = 0; t< Trajectory.trajectories.size(); t++)
 		{
-			//Loop through each traj, get each neighbor, if has drone, move to next neighbor
-			
+			for(int n = 0; n < Trajectory.trajectories.get(a.getID()).neighbors.size(); n++)
+			{
+				for(int r = 0; r < Robot.robots.size(); r++)
+					if(Robot.robots.get(r).getTrajectory().getID() == a.neighbors.get(n).getSecondTrajId())
+						hasBot = true;
+				if(hasBot == false)
+					System.out.println("no bot");
+			}
 		}
+
 	}
 	
 	public void createTraj(Graphics g) {
-		//Initial trajectory coordinates
-		//int x = getWidth()/2 + 200;
-		//int y = getHeight()/2;
-		
-		//Hardcoded radius and distBetweenTraj values
-		//if radius isn't already set - keeps a consistent radius
-		/*if(diam == 0){
-			diam = 100;
-		}
-		distBetweenTraj = 50;*/
-		
 		//Adds first trajectory to list once
 		if(Trajectory.trajectories.size() == 0)
 		{
@@ -219,24 +215,6 @@ public class DrawPanel extends JPanel {
 			rows = Integer.parseInt(temp1);
 			cols = Integer.parseInt(temp2);
 		}
-		/*
-		//Sets initial radius
-		diam = 10;
-		//Gets largest size the radius should be
-		if(rows > cols)
-		{
-			diam = (getWidth() - 650)/rows;
-		}
-		else
-			diam = (getHeight() - 420)/cols;
-		
-	    int distBetweenTraj = getWidth()/20;
-	    
-	    Trajectory t;
-	    //Assures space for menu
-	    int distanceX = 50;
-	    int distanceY = 100;
-	    */
 	    //Makes each trajectory
 		float anchorX = -(cols-1)*(Constants.trajRadius*2 + 20)/2;
 		float anchorY = -(rows-1)*(Constants.trajRadius*2 + 20)/2;
@@ -248,8 +226,6 @@ public class DrawPanel extends JPanel {
 	    	{
 	    		//+ (distBetweenTraj * r)  + (distBetweenTraj * c)
 	    		new Trajectory(anchorX + c*(Constants.trajRadius*2 + 20), anchorY + r*(Constants.trajRadius*2 + 20));
-	    		//trajList.add(new Trajectory(distanceX + (diam * 2 * r) - (distBetweenTraj * r), distanceY + (diam * 2 * c) - (distBetweenTraj * c)));
-	    		//tempTrajList.add(new Trajectory(distanceX + (diam * 2 * r) - (distBetweenTraj * r), distanceY + (diam * 2 * c) - (distBetweenTraj * c)));
 	    	}
 	    }
 	}
@@ -296,16 +272,6 @@ public class DrawPanel extends JPanel {
 	@Override
 	public void paint(Graphics g) {
 		super.paint( g );
-		/*if (Constants.running) {
-    			for(Robot r: Robot.robots) {
-    				r.move();
-    			}
-    		
-    			for(Robot r: Robot.robots) {
-    				r.logic();
-    				repaint();
-    			}
-		}*/
 		
 		float pixelRatio;	// Creating the pixel ratio, which is the number of pixels divided by the number of units for the window size
 	    pixelRatio = (float)(Math.min(getHeight(), getWidth())/800.0);
@@ -350,42 +316,6 @@ public class DrawPanel extends JPanel {
 	    		}
 			}
 	    }
-	    
-	    /*float originalRadius = diam;
-	    
-	    diam = diam*Math.min(getHeight(), getWidth())/700;
-	    
-	    for(Trajectory n : tempTrajList)
-	    {
-	    	n.setX(n.getX() - getWidth()/200); //getWidth() / 4 + n.getX()
-	    	n.setY(n.getY() - getHeight()/200);
-	    }
-	    
-	    //Draws each trajectory
-	    for(Trajectory n : tempTrajList)
-	    {
-	    	g.drawOval((int)(n.getX()), (int)(n.getY()), (int)diam, (int)diam);
-	    	g.drawString("" + n.getID(), (int)(n.getX() + diam/2), (int)(n.getY() + diam/2));
-	    }
-	    
-	    //Draws each drone
-	    for(Robot r : droneList)
-	    {
-	    	g.setColor(Color.BLACK);
-	    	//g.drawOval(getWidth() / 2, getHeight() / 2, 100, 100);
-	    	g.fillOval((int)(r.getX()), (int)(r.getTrajectory().getY() - diam/2*Math.sin(Math.toRadians(r.getAngle())) + diam/2 - 15), 30, 30);
-	    }
-	    
-	    //sample
-	    //g.drawOval(getWidth() / 2, getHeight() / 2, (int)radius, (int)radius);
-	    
-	    diam = originalRadius;
-	    
-	    for(int i = 0; i < tempTrajList.size(); i++)
-	    {
-	    	tempTrajList.get(i).setX(trajList.get(i).getX());
-	    	tempTrajList.get(i).setY(trajList.get(i).getY());
-	    }*/
 	    
 	}
 	

@@ -11,7 +11,6 @@ public class Trajectory {
 	private int direction;
 	ArrayList<Neighbor> neighbors;  // Neighbors to be better defined later
   
-  
 	public static ArrayList<Trajectory> trajectories = new ArrayList<Trajectory>();
   
   /*public void buildNetwork() {

@@ -82,4 +82,12 @@ public class Neighbor {
 		}
 		
 	}
+	int getFirstTrajId()
+	{
+		return trajID_a;
+	}
+	int getSecondTrajId()
+	{
+		return trajID_b;
+	}
 }
