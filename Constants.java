@@ -5,6 +5,8 @@ public class Constants {
 	public static float trajRadius = 100;
 	public static float robotSpeed = (float)0.02;
 	public static boolean running = false;
+	public static double scale = 1;
+	public static double translation = 1; //used for centering after scaling
   
 	public static float normalizeAngle(float angle) {  // Function which places an angle between range of 0-2pi. Replaced old one in Neighbor class
 		float newAngle = angle;
@@ -15,5 +17,13 @@ public class Constants {
 			newAngle += (float)(2*Math.PI);
 		}
 		return newAngle;
+	}
+	
+	public static void setScale(double sc){
+		scale = sc;
+	}
+	
+	public static void setTranslation(double tr){
+		translation = tr;
 	}
 }

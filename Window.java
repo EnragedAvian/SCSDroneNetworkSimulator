@@ -1,31 +1,21 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.RenderingHints;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.Timer;
 
 public class Window extends JFrame implements ActionListener{
 	private ButtonPanel buttons;
 	private MenuBar menu;
 	private DrawPanel draw;
 	private List<Trajectory> tList = new ArrayList();
+	private JButton zoomIn, zoomOut;
 	
 	public Window(){
 		buttons = new ButtonPanel();
@@ -40,7 +30,17 @@ public class Window extends JFrame implements ActionListener{
 		add(draw);
 		pack();
 		draw.setBackground(Color.WHITE);
-				
+		
+		//zoom in and out buttons
+		zoomIn = new JButton("+");
+		zoomOut = new JButton("-");
+		JPanel panel = new JPanel();
+		panel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		panel.add(zoomIn);
+		panel.add(zoomOut);
+		add(panel, BorderLayout.SOUTH);
+		
+		
 		//window settings
 		setSize(500, 300);
 		setExtendedState(JFrame.MAXIMIZED_BOTH); //fullscreen
@@ -61,6 +61,8 @@ public class Window extends JFrame implements ActionListener{
 		menu.newGraph.addActionListener(this);
 		menu.save.addActionListener(this);
 		
+		zoomIn.addActionListener(this);
+		zoomOut.addActionListener(this);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
@@ -125,6 +127,15 @@ public class Window extends JFrame implements ActionListener{
 			//see line 906 in ScreenWindow of old sim
 		}
 		
+		if(e.getSource() == zoomIn){
+			Constants.setScale(Constants.scale*1.1);
+			Constants.setTranslation((Constants.translation-51)/1.1);//needs some work, doesn't work at smaller window sizes
+		}
+		
+		if(e.getSource() == zoomOut){
+			Constants.setScale(Constants.scale/1.1);
+			Constants.setTranslation((Constants.translation+49)*1.1);//needs some work, see above
+		}
 	}
 
 }
