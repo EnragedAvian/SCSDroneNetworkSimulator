@@ -41,7 +41,7 @@ public class Robot {
 		/*if (Constants.running) {
 			this.start();
 		}*/
-		Timer timer = new Timer(10, new ActionListener() {
+		/*Timer timer = new Timer(10, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (Constants.running) {
@@ -50,7 +50,7 @@ public class Robot {
 				}
 			}
 		});
-		timer.start();
+		timer.start();*/
 		
 	}
   
@@ -250,6 +250,10 @@ public class Robot {
 		float result;
 		result = (float)(this.getTrajectory().getY() + radius * Math.sin((double)angle));
 		return result;
+	}
+	
+	float getAngle() {
+		return angle;
 	}
   
 }

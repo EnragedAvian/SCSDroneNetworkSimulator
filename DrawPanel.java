@@ -86,6 +86,80 @@ public class DrawPanel extends JPanel {
 	public void autoFillDrones(Graphics g) {
 		// TODO Create function that automatically fills trajectories, likely involves creation of master list of neighbor classes.
 	}
+	/*public void autoFillDrones(Graphics g) {
+		JTextField aField = new JTextField(5);
+		//JTextField bField = new JTextField(5);
+	
+		JPanel input = new JPanel();
+		input.setLayout(new BoxLayout(input, BoxLayout.Y_AXIS));
+	
+		input.add(new JLabel("Enter Angle in Degrees:"));
+		input.add(aField);
+	
+		input.add(Box.createVerticalStrut(15));
+	
+		//input.add(new JLabel("On trajectory:"));
+		//input.add(bField);
+	
+		//input.add(Box.createVerticalStrut(15));
+		
+		int result = JOptionPane.showConfirmDialog(null, input, "Enter Values", JOptionPane.OK_CANCEL_OPTION);
+		
+		float ang = 0;
+		//int id = 0;
+		
+		if (result == JOptionPane.OK_OPTION) {
+			String temp1 = aField.getText();
+		//	String temp2 = bField.getText();
+			//Gets angle and id
+			ang = Float.parseFloat(temp1);
+		//	id = Integer.parseInt(temp2);
+		}*/
+		
+		//new Robot(Trajectory.trajectories.get(id-1), (float)(Math.toRadians(ang)));	
+		/*for(int i = 0; i < Trajectory.trajectories.size(); i++)
+		{
+			if(Trajectory.trajectories.get(i).getDir() == 1)
+				new Robot(Trajectory.trajectories.get(i), (float)(Math.toRadians(ang)));	
+			else
+				new Robot(Trajectory.trajectories.get(i), (float)(Math.toRadians(360 - ang)));	
+		}*/
+		/*new Robot(Trajectory.trajectories.get(0), (float)(Math.toRadians(ang)));
+		//Loop through each traj, get each neighbor, if has drone, move to next neighbor
+		Trajectory a = Trajectory.trajectories.get(0);
+		boolean hasBot = false;
+		for(int t = 0; t < Trajectory.trajectories.size(); t++)
+		{
+			for(int n = 0; n < Trajectory.trajectories.get(a.getID()).neighbors.size(); n++)
+			{
+				float newAng = 0;
+				for(int r = 0; r < Robot.robots.size(); r++)
+					if(Robot.robots.get(r).getTrajectory().getID() == a.neighbors.get(n).getSecondTrajId())
+					{
+						hasBot = true;
+						//System.out.println("has bot");
+					}
+				if(hasBot == false)
+				{
+					System.out.println(ang);
+					System.out.println(360 / Math.toDegrees(a.neighbors.get(n).angle_a));
+					if(Math.toDegrees(a.neighbors.get(n).angle_a) == 0)
+					{
+						newAng = ang*2;
+					}
+					else
+					{
+						newAng = (360 / (float)Math.toDegrees(a.neighbors.get(n).angle_a)) * ang;
+						newAng += ang;
+					}
+					new Robot(a.neighbors.get(n).traj_b, (float)(Math.toRadians(newAng)));
+					a = a.neighbors.get(n).traj_b;
+				}
+				hasBot = false;
+			}
+		}
+
+	}*/
 	
 	public void createTraj(Graphics g) {
 		//Initial trajectory coordinates
