@@ -78,7 +78,9 @@ public class Window extends JFrame implements ActionListener{
 		}
 		
 		if(e.getSource() == buttons.autofill){
-			draw.autoFillDrones(getGraphics());
+			//draw.autoFillDrones(getGraphics());
+			new Robot(Trajectory.trajectories.get(0), 0);
+			Trajectory.trajectories.get(0).populateNeighbors();
 			repaint();
 		}
 		

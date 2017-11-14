@@ -31,7 +31,7 @@ public class DrawPanel extends JPanel {
 		Timer timer = new Timer(20, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				/*if (Constants.running) {
+				if (Constants.running) {
 					for(Robot r: Robot.robots) {
 			    		r.move();
 				    }
@@ -39,7 +39,7 @@ public class DrawPanel extends JPanel {
 				    for(Robot r: Robot.robots) {
 			    		r.logic();
 				    }
-				}*/
+				}
 				repaint();
 			}
 		});
@@ -78,7 +78,7 @@ public class DrawPanel extends JPanel {
 		new Robot(Trajectory.trajectories.get(id-1), (float)(Math.toRadians(ang)));
 	}
 	
-	public void autoFillDrones(Graphics g) {
+	/*public void autoFillDrones(Graphics g) {
 		JTextField aField = new JTextField(5);
 		//JTextField bField = new JTextField(5);
 
@@ -106,7 +106,7 @@ public class DrawPanel extends JPanel {
 			//Gets angle and id
 			ang = Float.parseFloat(temp1);
 		//	id = Integer.parseInt(temp2);
-		}
+		}*/
 		
 		//new Robot(Trajectory.trajectories.get(id-1), (float)(Math.toRadians(ang)));	
 		/*for(int i = 0; i < Trajectory.trajectories.size(); i++)
@@ -116,7 +116,7 @@ public class DrawPanel extends JPanel {
 			else
 				new Robot(Trajectory.trajectories.get(i), (float)(Math.toRadians(360 - ang)));	
 		}*/
-		new Robot(Trajectory.trajectories.get(0), (float)(Math.toRadians(ang)));
+		/*new Robot(Trajectory.trajectories.get(0), (float)(Math.toRadians(ang)));
 		//Loop through each traj, get each neighbor, if has drone, move to next neighbor
 		Trajectory a = Trajectory.trajectories.get(0);
 		boolean hasBot = false;
@@ -132,7 +132,7 @@ public class DrawPanel extends JPanel {
 			}
 		}
 
-	}
+	}*/
 	
 	public void createTraj(Graphics g) {
 		//Adds first trajectory to list once

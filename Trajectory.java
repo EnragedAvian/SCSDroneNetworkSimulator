@@ -108,4 +108,29 @@ public class Trajectory {
 			return false;
 		}
 	}
+	
+	void populateNeighbors() {	// Function to populate neighboring trajectories with synchronized robots
+		float tempAngle = 0;
+		float tempDiff;
+		float angle;
+		for(Robot r: Robot.robots) {
+			if (r.getID() == trajID) {
+				tempAngle = r.getAngle();
+			}
+		}
+		for(Neighbor n: neighbors) {
+			boolean filled = false;
+			for(Robot r: Robot.robots) {
+				if (r.getID() == n.trajID_b) {
+					filled = true;
+				}
+			}
+			if(!filled) {
+				tempDiff = tempAngle - n.angle_a;
+				angle = n.angle_b - tempDiff;
+				new Robot(n.traj_b, angle);
+				n.traj_b.populateNeighbors();
+			}
+		}
+	}
 }
