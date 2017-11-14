@@ -2,9 +2,15 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +31,7 @@ public class DrawPanel extends JPanel {
 	private float diam;
 	private int distBetweenTraj;
 	private boolean showEdges = false;
+	private ArrayList<Shape> robotShapes = new ArrayList<>();
 	
 	DrawPanel () {
 		// Adding timer which controls the timing and movement of things within the program
@@ -44,6 +51,27 @@ public class DrawPanel extends JPanel {
 			}
 		});
 		timer.start();
+		
+		//click to remove drones
+		addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent me) {
+            	//System.out.println("Click!");
+                super.mouseClicked(me);
+                
+                //TODO work with scaling
+                /*Point p = new Point((int)(me.getX()*Constants.scale), (int)(me.getY()*Constants.scale));
+                p.translate((int)Constants.translation, (int)Constants.translation);
+                */
+                
+                for (int i = 0; i < robotShapes.size(); i++) {
+                	Shape r = robotShapes.get(i);
+                    if (r.contains(me.getPoint())) {//check if mouse is clicked within shape
+                        Robot.robots.remove(i); //not 100% on why this works -- might have some issues with IDs in the future
+                    }
+                }
+            }
+        });
 	}
 	
 	public void createDrone(Graphics g) {
@@ -325,39 +353,10 @@ public class DrawPanel extends JPanel {
 	public void removeEdges() {
 		showEdges = false;
 	}
-	 
-	@Override
-	public void paint(Graphics g) {
-		super.paint( g );
-		/*if (Constants.running) {
-    			for(Robot r: Robot.robots) {
-    				r.move();
-    			}
-    		
-    			for(Robot r: Robot.robots) {
-    				r.logic();
-    				repaint();
-    			}
-		}*/
-		
-		float pixelRatio;	// Creating the pixel ratio, which is the number of pixels divided by the number of units for the window size
-	    pixelRatio = (float)(Math.min(getHeight(), getWidth())/800.0);
-	    
-	    Graphics2D g2 = ( Graphics2D ) g; // cast g to Graphics2D  
-	    g2.scale(Constants.scale, Constants.scale);
-	    g2.translate(Constants.translation, .5*Constants.translation);
-	    
-	    
-	    
-	    for(Robot r: Robot.robots) {
-    			g.setColor(Color.BLACK);
-    			g.fillOval((int)(r.getX()*pixelRatio + getWidth()/2)-10, (int)((getHeight()/2 - r.getY()*pixelRatio))-10, 20, 20);
-	    }
-	    
-	}
 	
 	@Override
 	public void paintComponent(Graphics g) {
+		robotShapes.clear();
 	    super.paintComponent( g ); // call superclass's paintComponent
 	    Graphics2D g2 = ( Graphics2D ) g; // cast g to Graphics2D  
 	    g.drawString("Drone Simulator", 50, 50);
@@ -379,6 +378,7 @@ public class DrawPanel extends JPanel {
 	    for(Robot r: Robot.robots) {
 	    		g.setColor(Color.BLACK);
 	    		g.fillOval((int)(r.getX()*pixelRatio + getWidth()/2)-10, (int)((getHeight()/2 - r.getY()*pixelRatio))-10, 20, 20);
+	    		robotShapes.add(new Ellipse2D.Double((int)(r.getX()*pixelRatio + getWidth()/2)-10, (int)((getHeight()/2 - r.getY()*pixelRatio))-10, 20, 20));
 	    }
 	    
 	    // show/hide edges
@@ -392,47 +392,11 @@ public class DrawPanel extends JPanel {
 			}
 	    }
 	    
-	    
-	    /*float originalRadius = diam;
-	    
-	    diam = diam*Math.min(getHeight(), getWidth())/700;
-	    
-	    for(Trajectory n : tempTrajList)
-	    {
-	    	n.setX(n.getX() - getWidth()/200); //getWidth() / 4 + n.getX()
-	    	n.setY(n.getY() - getHeight()/200);
-	    }
-	    
-	    //Draws each trajectory
-	    for(Trajectory n : tempTrajList)
-	    {
-	    	g.drawOval((int)(n.getX()), (int)(n.getY()), (int)diam, (int)diam);
-	    	g.drawString("" + n.getID(), (int)(n.getX() + diam/2), (int)(n.getY() + diam/2));
-	    }
-	    
-	    //Draws each drone
-	    for(Robot r : droneList)
-	    {
-	    	g.setColor(Color.BLACK);
-	    	//g.drawOval(getWidth() / 2, getHeight() / 2, 100, 100);
-	    	g.fillOval((int)(r.getX()), (int)(r.getTrajectory().getY() - diam/2*Math.sin(Math.toRadians(r.getAngle())) + diam/2 - 15), 30, 30);
-	    }
-	    
-	    //sample
-	    //g.drawOval(getWidth() / 2, getHeight() / 2, (int)radius, (int)radius);
-	    
-	    diam = originalRadius;
-	    
-	    for(int i = 0; i < tempTrajList.size(); i++)
-	    {
-	    	tempTrajList.get(i).setX(trajList.get(i).getX());
-	    	tempTrajList.get(i).setY(trajList.get(i).getY());
-	    }*/
-	    
 	}
 	
 	public void clear(){
 		Robot.robots.clear();
+		robotShapes.clear();
 		Trajectory.trajectories.clear();
 		diam = 0;
 		repaint();
