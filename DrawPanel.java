@@ -342,7 +342,13 @@ public class DrawPanel extends JPanel {
 		
 		float pixelRatio;	// Creating the pixel ratio, which is the number of pixels divided by the number of units for the window size
 	    pixelRatio = (float)(Math.min(getHeight(), getWidth())/800.0);
-		
+	    
+	    Graphics2D g2 = ( Graphics2D ) g; // cast g to Graphics2D  
+	    g2.scale(Constants.scale, Constants.scale);
+	    g2.translate(Constants.translation, .5*Constants.translation);
+	    
+	    
+	    
 	    for(Robot r: Robot.robots) {
     			g.setColor(Color.BLACK);
     			g.fillOval((int)(r.getX()*pixelRatio + getWidth()/2)-10, (int)((getHeight()/2 - r.getY()*pixelRatio))-10, 20, 20);
