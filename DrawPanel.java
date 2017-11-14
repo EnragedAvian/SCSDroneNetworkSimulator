@@ -28,10 +28,10 @@ public class DrawPanel extends JPanel {
 	
 	DrawPanel () {
 		// Adding timer which controls the timing and movement of things within the program
-		Timer timer = new Timer(10, new ActionListener() {
+		Timer timer = new Timer(20, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (Constants.running) {
+				/*if (Constants.running) {
 					for(Robot r: Robot.robots) {
 			    		r.move();
 				    }
@@ -39,7 +39,7 @@ public class DrawPanel extends JPanel {
 				    for(Robot r: Robot.robots) {
 			    		r.logic();
 				    }
-				}
+				}*/
 				repaint();
 			}
 		});
@@ -75,7 +75,6 @@ public class DrawPanel extends JPanel {
 			ang = Float.parseFloat(temp1);
 			id = Integer.parseInt(temp2);
 		}
-		
 		new Robot(Trajectory.trajectories.get(id-1), (float)(Math.toRadians(ang)));
 	}
 	

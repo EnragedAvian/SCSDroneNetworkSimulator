@@ -1,17 +1,22 @@
 //  Robot class which handles the creation and motion of robots on screen.
 
 import java.util.ArrayList;
+
+import javax.swing.Timer;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.lang.Math;
 
-public class Robot extends Thread {
+public class Robot {
 	private Trajectory t;
 	private float angle;
 	private float radius;
 	private int ID;
 	private Neighbor checking;	// ID of the trajectory we want to be checking
 	
-	private Thread thread;
-	private String threadName;
+	/*private Thread thread;
+	private String threadName;*/
 	
 	boolean transitioningIn;
 	boolean transitioningOut;
@@ -31,11 +36,22 @@ public class Robot extends Thread {
 		transitioningOut = false;
 		radius = Constants.trajRadius;
 		robots.add(this);
-		threadName = "Robot " + ID;
+		/*threadName = "Robot " + ID;*/
 		
 		/*if (Constants.running) {
 			this.start();
 		}*/
+		Timer timer = new Timer(10, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (Constants.running) {
+					move();
+					logic();
+				}
+			}
+		});
+		timer.start();
+		
 	}
   
 	boolean checkNeighbor(Trajectory traj) {  // Checks the range between robot and neighbor in specified trajectory
@@ -57,16 +73,15 @@ public class Robot extends Thread {
 	}
   
 	/*public void run () {
-		try {
-			while (Constants.running) {
-				System.out.println("Moving robot " + ID);
+		System.out.println("Run function called.");
+		while (Constants.running) {
+			try {
 				move();
-				System.out.println("Logic robot " + ID);
 				logic();
-				Thread.sleep(5);
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				System.out.println("Error on thread!");
 			}
-		} catch (InterruptedException e) {
-			System.out.println("Error on thread " + threadName);
 		}
 	}*/
 	
