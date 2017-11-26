@@ -118,7 +118,8 @@ public class Window extends JFrame implements ActionListener{
 		}
 
 		if(e.getSource() == menu.load){
-			//see line 960 in ScreenWindow of old sim
+			draw.loadGrid();
+			repaint();
 		}
 		
 		if(e.getSource() == menu.newGraph){
@@ -126,7 +127,8 @@ public class Window extends JFrame implements ActionListener{
 		}
 		
 		if(e.getSource() == menu.save){
-			//see line 906 in ScreenWindow of old sim
+			draw.saveGrid();
+			repaint();
 		}
 		
 		if(e.getSource() == zoomIn){

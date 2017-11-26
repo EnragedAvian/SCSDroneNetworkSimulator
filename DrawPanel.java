@@ -11,11 +11,19 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -111,95 +119,9 @@ public class DrawPanel extends JPanel {
 		
 	}
 	
-	public void autoFillDrones(Graphics g) {
-		// TODO Create function that automatically fills trajectories, likely involves creation of master list of neighbor classes.
-	}
-	/*public void autoFillDrones(Graphics g) {
-		JTextField aField = new JTextField(5);
-		//JTextField bField = new JTextField(5);
-	
-		JPanel input = new JPanel();
-		input.setLayout(new BoxLayout(input, BoxLayout.Y_AXIS));
-	
-		input.add(new JLabel("Enter Angle in Degrees:"));
-		input.add(aField);
-	
-		input.add(Box.createVerticalStrut(15));
-	
-		//input.add(new JLabel("On trajectory:"));
-		//input.add(bField);
-	
-		//input.add(Box.createVerticalStrut(15));
-		
-		int result = JOptionPane.showConfirmDialog(null, input, "Enter Values", JOptionPane.OK_CANCEL_OPTION);
-		
-		float ang = 0;
-		//int id = 0;
-		
-		if (result == JOptionPane.OK_OPTION) {
-			String temp1 = aField.getText();
-		//	String temp2 = bField.getText();
-			//Gets angle and id
-			ang = Float.parseFloat(temp1);
-		//	id = Integer.parseInt(temp2);
-		}*/
-		
-		//new Robot(Trajectory.trajectories.get(id-1), (float)(Math.toRadians(ang)));	
-		/*for(int i = 0; i < Trajectory.trajectories.size(); i++)
-		{
-			if(Trajectory.trajectories.get(i).getDir() == 1)
-				new Robot(Trajectory.trajectories.get(i), (float)(Math.toRadians(ang)));	
-			else
-				new Robot(Trajectory.trajectories.get(i), (float)(Math.toRadians(360 - ang)));	
-		}*/
-		/*new Robot(Trajectory.trajectories.get(0), (float)(Math.toRadians(ang)));
-		//Loop through each traj, get each neighbor, if has drone, move to next neighbor
-		Trajectory a = Trajectory.trajectories.get(0);
-		boolean hasBot = false;
-		for(int t = 0; t < Trajectory.trajectories.size(); t++)
-		{
-			for(int n = 0; n < Trajectory.trajectories.get(a.getID()).neighbors.size(); n++)
-			{
-				float newAng = 0;
-				for(int r = 0; r < Robot.robots.size(); r++)
-					if(Robot.robots.get(r).getTrajectory().getID() == a.neighbors.get(n).getSecondTrajId())
-					{
-						hasBot = true;
-						//System.out.println("has bot");
-					}
-				if(hasBot == false)
-				{
-					System.out.println(ang);
-					System.out.println(360 / Math.toDegrees(a.neighbors.get(n).angle_a));
-					if(Math.toDegrees(a.neighbors.get(n).angle_a) == 0)
-					{
-						newAng = ang*2;
-					}
-					else
-					{
-						newAng = (360 / (float)Math.toDegrees(a.neighbors.get(n).angle_a)) * ang;
-						newAng += ang;
-					}
-					new Robot(a.neighbors.get(n).traj_b, (float)(Math.toRadians(newAng)));
-					a = a.neighbors.get(n).traj_b;
-				}
-				hasBot = false;
-			}
-		}
-
-	}*/
+	public void autoFillDrones(Graphics g) {}
 	
 	public void createTraj(Graphics g) {
-		//Initial trajectory coordinates
-		//int x = getWidth()/2 + 200;
-		//int y = getHeight()/2;
-		
-		//Hardcoded radius and distBetweenTraj values
-		//if radius isn't already set - keeps a consistent radius
-		/*if(diam == 0){
-			diam = 100;
-		}
-		distBetweenTraj = 50;*/
 		
 		//Adds first trajectory to list once
 		if(Trajectory.trajectories.size() == 0)
@@ -280,24 +202,6 @@ public class DrawPanel extends JPanel {
 			rows = Integer.parseInt(temp1);
 			cols = Integer.parseInt(temp2);
 		}
-		/*
-		//Sets initial radius
-		diam = 10;
-		//Gets largest size the radius should be
-		if(rows > cols)
-		{
-			diam = (getWidth() - 650)/rows;
-		}
-		else
-			diam = (getHeight() - 420)/cols;
-		
-	    int distBetweenTraj = getWidth()/20;
-	    
-	    Trajectory t;
-	    //Assures space for menu
-	    int distanceX = 50;
-	    int distanceY = 100;
-	    */
 	    //Makes each trajectory
 		float anchorX = -(cols-1)*(Constants.trajRadius*2 + 20)/2;
 		float anchorY = -(rows-1)*(Constants.trajRadius*2 + 20)/2;
@@ -307,12 +211,97 @@ public class DrawPanel extends JPanel {
 	    {
 	    	for(int c = 0; c < cols; c++)
 	    	{
-	    		//+ (distBetweenTraj * r)  + (distBetweenTraj * c)
 	    		new Trajectory(anchorX + c*(Constants.trajRadius*2 + 20), anchorY + r*(Constants.trajRadius*2 + 20));
-	    		//trajList.add(new Trajectory(distanceX + (diam * 2 * r) - (distBetweenTraj * r), distanceY + (diam * 2 * c) - (distBetweenTraj * c)));
-	    		//tempTrajList.add(new Trajectory(distanceX + (diam * 2 * r) - (distBetweenTraj * r), distanceY + (diam * 2 * c) - (distBetweenTraj * c)));
 	    	}
 	    }
+	}
+	
+	public void saveGrid(){
+		JFrame parentFrame = new JFrame();
+		 
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setDialogTitle("Specify a file to save");   
+		 
+		int userSelection = fileChooser.showSaveDialog(parentFrame);
+		 
+		if (userSelection == JFileChooser.APPROVE_OPTION) {
+			try{
+				File file = fileChooser.getSelectedFile();
+				String filename = file.getAbsolutePath() + ".txt";
+				FileWriter fw = new FileWriter(filename, true);
+				BufferedWriter bw = new BufferedWriter(fw);
+				
+				for(int i = 0; i < Trajectory.trajectories.size(); i++)
+				{
+					Trajectory traj = Trajectory.trajectories.get(i);
+					bw.write(String.valueOf(traj.getX()));
+					bw.newLine();
+					bw.write(String.valueOf(traj.getY()));
+					bw.newLine();
+				}
+				//bw.newLine();
+				bw.write("R");
+				bw.newLine();
+				for(int j = 0; j < Robot.robots.size(); j++)
+				{
+					Robot r = Robot.robots.get(j);
+					bw.write(String.valueOf(r.getTrajectory().getID()));
+					bw.newLine();
+					bw.write(String.valueOf(r.getAngle()));
+					bw.newLine();
+				}
+				
+				bw.close();
+				System.out.println(file + ".txt");
+			}
+			catch(IOException ioe)
+			{
+				System.err.println(":(");
+			}
+		}
+	}
+	
+	public void loadGrid(){
+		JFrame parentFrame = new JFrame();
+		JFileChooser fileChooser = new JFileChooser();
+		boolean trajlist = true;
+		int returnVal = fileChooser.showOpenDialog(parentFrame);
+		if(returnVal == JFileChooser.APPROVE_OPTION)
+		{
+			File file = fileChooser.getSelectedFile();
+			try {
+				Scanner scan = new Scanner(file);
+				boolean robots = false;
+				while(scan.hasNext())
+				{
+					String first = scan.next();
+					if(first.equals("R"))
+					{
+						robots = true;
+						first = scan.next();
+					}
+					if(robots == false)
+					{
+						float xCoord = Float.parseFloat(first);
+						float yCoord = Float.parseFloat(scan.next());
+			    		new Trajectory(xCoord, yCoord);
+					}
+					else if(robots == true)
+					{
+						int trajID = Integer.parseInt(first);
+						Trajectory t = Trajectory.trajectories.get(trajID - 1);
+						float ang = Float.parseFloat(scan.next());
+			    		new Robot(t, ang);
+					}
+				}
+			}catch (FileNotFoundException e) {
+				System.out.println("File not found.");
+			} catch(NumberFormatException e){
+				
+			}catch(NoSuchElementException e){
+				
+			}
+		}
 	}
 	
 	public void removeTraj(){
