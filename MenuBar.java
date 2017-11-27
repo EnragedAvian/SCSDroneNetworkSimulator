@@ -24,7 +24,7 @@ public class MenuBar extends JMenuBar implements ActionListener{
 		help = new JMenu("Help");
 		
 		//options
-		newGraph = new JMenuItem("New Graph");
+		newGraph = new JMenuItem("Clear");
 		save = new JMenuItem("Save to Text File");
 		load = new JMenuItem("Load from Text File");
 		quit = new JMenuItem("Quit");

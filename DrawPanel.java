@@ -119,8 +119,6 @@ public class DrawPanel extends JPanel {
 		
 	}
 	
-	public void autoFillDrones(Graphics g) {}
-	
 	public void createTraj(Graphics g) {
 		
 		//Adds first trajectory to list once
