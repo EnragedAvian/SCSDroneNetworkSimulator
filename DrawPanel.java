@@ -341,6 +341,53 @@ public class DrawPanel extends JPanel {
 		showEdges = false;
 	}
 	
+		
+	public void clear(){
+		Robot.robots.clear();
+		robotShapes.clear();
+		Trajectory.trajectories.clear();
+		diam = 0;
+		repaint();
+	}
+	
+	public void addData(){
+		JTextField aField = new JTextField(5);
+		JPanel input = new JPanel();
+		input.setLayout(new BoxLayout(input, BoxLayout.Y_AXIS));
+
+		input.add(new JLabel("Enter robot ID to add data to"));
+		input.add(aField);
+		
+		int result = JOptionPane.showConfirmDialog(null, input, "Add Data", JOptionPane.OK_CANCEL_OPTION);
+		if (result == JOptionPane.OK_OPTION) {
+			String temp1 = aField.getText();
+			for(Robot r:Robot.robots){
+				if(r.getID() == Integer.parseInt(temp1)){
+					r.setData(true);
+				}
+			}
+		}
+	}
+	
+	public void removeData(){
+		JTextField aField = new JTextField(5);
+		JPanel input = new JPanel();
+		input.setLayout(new BoxLayout(input, BoxLayout.Y_AXIS));
+
+		input.add(new JLabel("Enter robot ID to remove data from"));
+		input.add(aField);
+		
+		int result = JOptionPane.showConfirmDialog(null, input, "Remove Data", JOptionPane.OK_CANCEL_OPTION);
+		if (result == JOptionPane.OK_OPTION) {
+			String temp1 = aField.getText();
+			for(Robot r:Robot.robots){
+				if(r.getID() == Integer.parseInt(temp1)){
+					r.setData(false);
+				}
+			}
+		}
+	}
+	
 	@Override
 	public void paintComponent(Graphics g) {
 		robotShapes.clear();
@@ -363,7 +410,12 @@ public class DrawPanel extends JPanel {
 	    }
 	    
 	    for(Robot r: Robot.robots) {
-	    		g.setColor(Color.BLACK);
+	    		if(!r.hasData()){
+	    			g.setColor(Color.BLACK);
+	    		}
+	    		else{
+	    			g.setColor(Color.BLUE);
+	    		}
 	    		g.fillOval((int)(r.getX()*pixelRatio + getWidth()/2)-10, (int)((getHeight()/2 - r.getY()*pixelRatio))-10, 20, 20);
 	    		robotShapes.add(new Ellipse2D.Double((int)(r.getX()*pixelRatio + getWidth()/2)-10, (int)((getHeight()/2 - r.getY()*pixelRatio))-10, 20, 20));
 	    }
@@ -380,13 +432,5 @@ public class DrawPanel extends JPanel {
 	    }
 	    
 	}
-	
-	public void clear(){
-		Robot.robots.clear();
-		robotShapes.clear();
-		Trajectory.trajectories.clear();
-		diam = 0;
-		repaint();
-	}
-	
+
 }

@@ -56,6 +56,8 @@ public class Window extends JFrame implements ActionListener{
 		buttons.removeTraj.addActionListener(this);
 		buttons.showEdges.addActionListener(this);
 		buttons.start.addActionListener(this);
+		buttons.addData.addActionListener(this);
+		buttons.removeData.addActionListener(this);
 		
 		menu.load.addActionListener(this);
 		menu.newGraph.addActionListener(this);
@@ -116,6 +118,17 @@ public class Window extends JFrame implements ActionListener{
 				Constants.running = true;
 				buttons.start.setText("Stop");
 			}
+		}
+		
+		if(e.getSource() == buttons.addData)
+		{
+			draw.addData();
+			//TODO need show robot ID method
+		}
+		
+		if(e.getSource() == buttons.removeData)
+		{
+			draw.removeData();
 		}
 
 		if(e.getSource() == menu.load){

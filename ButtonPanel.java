@@ -7,7 +7,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 public class ButtonPanel extends JPanel{
-	protected JButton start, autoGrid, addTraj, removeTraj, addDrone, autofill, showEdges, removeEdges;
+	protected JButton start, autoGrid, addTraj, removeTraj, addDrone, autofill, showEdges, removeEdges, addData, removeData;
 	
 	public ButtonPanel(){
 		try {
@@ -35,9 +35,11 @@ public class ButtonPanel extends JPanel{
 		showEdges = new JButton("Show Edges");
 		removeEdges = new JButton("Hide Edges"); // rename to "Hide Edges" for the time being. If we want "Remove Edge" functionality, rename it back.
 		//removeEdges = new JButton("Remove Edges");
+		addData = new JButton ("Add Data");
+		removeData = new JButton ("Remove Data");
 		
 		//set panel to GridLayout
-		GridLayout layout = new GridLayout(4,2);
+		GridLayout layout = new GridLayout(5,2);
 		layout.setHgap(5);
 		layout.setVgap(5);
 		setLayout(layout);
@@ -49,7 +51,8 @@ public class ButtonPanel extends JPanel{
 		add(autofill);
 		add(showEdges);
 		add(removeEdges);
-		
+		add(addData);
+		add(removeData);
 		
 	}
 }

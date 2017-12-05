@@ -14,6 +14,7 @@ public class Robot {
 	private float radius;
 	private int ID;
 	private Neighbor checking;	// ID of the trajectory we want to be checking
+	private boolean hasData = false;
 	
 	/*private Thread thread;
 	private String threadName;*/
@@ -256,4 +257,11 @@ public class Robot {
 		return angle;
 	}
   
+	void setData(boolean b){
+		hasData = b;
+	}
+	
+	boolean hasData(){
+		return hasData;
+	}
 }
