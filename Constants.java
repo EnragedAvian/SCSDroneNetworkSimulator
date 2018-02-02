@@ -2,11 +2,11 @@
 
 public class Constants {
 	public static float wifiRange = 50;
-	public static float trajRadius = 100;
+	public static float trajRadius = 50;
+	public static float trajPadding = 10;
 	public static float robotSpeed = (float)0.02;
 	public static boolean running = false;
-	public static double scale = 1;
-	public static double translation = 1; //used for centering after scaling
+	public static float scale = 1;
   
 	public static float normalizeAngle(float angle) {  // Function which places an angle between range of 0-2pi. Replaced old one in Neighbor class
 		float newAngle = angle;
@@ -19,11 +19,10 @@ public class Constants {
 		return newAngle;
 	}
 	
-	public static void setScale(double sc){
+	public static void setScale(float sc){
 		scale = sc;
-	}
-	
-	public static void setTranslation(double tr){
-		translation = tr;
+		trajRadius = scale*trajRadius;
+		trajPadding = scale*trajPadding;
+		wifiRange = scale*wifiRange;
 	}
 }

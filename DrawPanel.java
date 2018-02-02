@@ -82,7 +82,7 @@ public class DrawPanel extends JPanel {
         });
 	}
 	
-	public void createDrone(Graphics g) {
+	public void createRobot(Graphics g) {
 		JTextField aField = new JTextField(5);
 		JTextField bField = new JTextField(5);
 
@@ -200,16 +200,16 @@ public class DrawPanel extends JPanel {
 			rows = Integer.parseInt(temp1);
 			cols = Integer.parseInt(temp2);
 		}
-	    //Makes each trajectory
-		float anchorX = -(cols-1)*(Constants.trajRadius*2 + 20)/2;
-		float anchorY = -(rows-1)*(Constants.trajRadius*2 + 20)/2;
 		
+	    //Makes each trajectory
+		float anchorX = -(cols-1)*(Constants.trajRadius*2 + Constants.trajPadding)/2;
+		float anchorY = -(rows-1)*(Constants.trajRadius*2 + Constants.trajPadding)/2;
 		
 	    for(int r = 0; r < rows; r++)
 	    {
 	    	for(int c = 0; c < cols; c++)
 	    	{
-	    		new Trajectory(anchorX + c*(Constants.trajRadius*2 + 20), anchorY + r*(Constants.trajRadius*2 + 20));
+	    		new Trajectory(anchorX + c*(Constants.trajRadius*2 + Constants.trajPadding), anchorY + r*(Constants.trajRadius*2 + Constants.trajPadding));
 	    	}
 	    }
 	}
@@ -394,8 +394,8 @@ public class DrawPanel extends JPanel {
 	    super.paintComponent( g ); // call superclass's paintComponent
 	    Graphics2D g2 = ( Graphics2D ) g; // cast g to Graphics2D  
 	    g.drawString("Drone Simulator", 50, 50);
-	    g2.scale(Constants.scale, Constants.scale);
-	    g2.translate(Constants.translation, .5*Constants.translation);
+	    //g2.scale(Constants.scale, Constants.scale);
+	    //g2.translate(Constants.translation, .5*Constants.translation);
 	    float pixelRatio;	// Creating the pixel ratio, which is the number of pixels divided by the number of units for the window size
 	    pixelRatio = (float)(Math.min(getHeight(), getWidth())/800.0);
 	    
@@ -416,8 +416,8 @@ public class DrawPanel extends JPanel {
 	    		else{
 	    			g.setColor(Color.BLUE);
 	    		}
-	    		g.fillOval((int)(r.getX()*pixelRatio + getWidth()/2)-10, (int)((getHeight()/2 - r.getY()*pixelRatio))-10, 20, 20);
-	    		robotShapes.add(new Ellipse2D.Double((int)(r.getX()*pixelRatio + getWidth()/2)-10, (int)((getHeight()/2 - r.getY()*pixelRatio))-10, 20, 20));
+	    		g.fillOval((int)(r.getX()*pixelRatio + getWidth()/2-Constants.scale*Constants.trajPadding/2), (int)(getHeight()/2 - r.getY()*pixelRatio-Constants.scale*Constants.trajPadding/2), (int)(Constants.scale*Constants.trajPadding), (int)(Constants.scale*Constants.trajPadding));
+	    		robotShapes.add(new Ellipse2D.Double((int)(r.getX()*pixelRatio + getWidth()/2-Constants.scale*Constants.trajPadding/2), (int)(getHeight()/2 - r.getY()*pixelRatio-Constants.scale*Constants.trajPadding/2), (int)(Constants.scale*Constants.trajPadding), (int)(Constants.scale*Constants.trajPadding)));
 	    }
 	    
 	    // show/hide edges

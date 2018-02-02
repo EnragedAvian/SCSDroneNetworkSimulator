@@ -70,7 +70,7 @@ public class Window extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if(e.getSource() == buttons.addDrone){
-			draw.createDrone(getGraphics());
+			draw.createRobot(getGraphics());
 			repaint();
 		}
 		
@@ -146,14 +146,28 @@ public class Window extends JFrame implements ActionListener{
 		}
 		
 		if(e.getSource() == zoomIn){
-			Constants.setScale(Constants.scale*1.1);
-			Constants.setTranslation((Constants.translation-51)/1.1);//needs some work, doesn't work at smaller window sizes
+			Constants.setScale((float)1.1);
+			for(Trajectory t:Trajectory.trajectories){
+				t.setX(t.getX()*Constants.scale);
+				t.setY(t.getY()*Constants.scale);
+			}
+			for(Robot r:Robot.robots){
+				r.setRadius(r.getRadius()*Constants.scale);
+			}
 		}
 		
 		if(e.getSource() == zoomOut){
-			Constants.setScale(Constants.scale/1.1);
-			Constants.setTranslation((Constants.translation+49)*1.1);//needs some work, see above
+			Constants.setScale((float)(1/1.1));
+			for(Trajectory t:Trajectory.trajectories){
+				t.setX(t.getX()*Constants.scale);
+				t.setY(t.getY()*Constants.scale);
+			}
+			for(Robot r:Robot.robots){
+				r.setRadius(r.getRadius()*Constants.scale);
+			}
 		}
+		
+		//TODO: Default scaling
 	}
 
 }

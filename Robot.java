@@ -54,6 +54,14 @@ public class Robot {
 		timer.start();*/
 		
 	}
+	
+	float getRadius(){
+		return radius;
+	}
+	
+	void setRadius(float rval){
+		radius = rval;
+	}
   
 	boolean checkNeighbor(Trajectory traj) {  // Checks the range between robot and neighbor in specified trajectory
 		// TODO Add logic keeping track of how many times neighbor has been passed

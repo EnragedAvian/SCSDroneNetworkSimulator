@@ -94,6 +94,14 @@ public class Trajectory {
 		Neighbor newNeighbor = new Neighbor(this, t);
 		neighbors.add(newNeighbor);
 	}
+	
+	void setX(float xval){
+		x = xval;
+	}
+	
+	void setY(float yval){
+		y = yval;
+	}
   
 	boolean inRange(Trajectory t) {
 		float xDist = Math.abs(x - t.getX());
