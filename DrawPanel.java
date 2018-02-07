@@ -52,7 +52,7 @@ public class DrawPanel extends JPanel {
 				    }
 				    
 				    for(Robot r: Robot.robots) {
-			    		r.logic();
+				    	r.logic();
 				    }
 				}
 				repaint();

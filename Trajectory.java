@@ -26,7 +26,7 @@ public class Trajectory {
 		trajectories.add(this);  // Adding trajectory to the arraylist of trajectories
     
 		trajID = trajectories.size();
-		System.out.println("Trajectory size: " + trajectories.size());
+		//System.out.println("Trajectory size: " + trajectories.size());
     
 		neighbors = new ArrayList<Neighbor>();
     
@@ -34,7 +34,7 @@ public class Trajectory {
     
 		if (trajectories.size() == 1) {
 			direction = 1;
-			System.out.println("Created Direction for trajectory " + trajID);
+			//System.out.println("Created Direction for trajectory " + trajID);
 		} else {
 			//Knowingly creating issues that can be fixed later. Namely, that there is no checking to see if trajectories are too close to one another
 			ArrayList<Trajectory> compareTrajectories = new ArrayList<Trajectory>();
@@ -44,7 +44,7 @@ public class Trajectory {
 				if (trajectories.get(i).getID()!=trajID) {
 					if (inRange(trajectories.get(i))) {
 						compareTrajectories.add(trajectories.get(i));
-						System.out.println("Trajectory found within range!");
+						//System.out.println("Trajectory found within range!");
 					}
 				}
 			}
@@ -62,8 +62,8 @@ public class Trajectory {
 					if (direction != compareTrajectories.get(k).getDir()) {
 						addNeighbor(compareTrajectories.get(k));
 						compareTrajectories.get(k).addNeighbor(this);
-						System.out.println("Added a neighbor!");
-						System.out.println("Neighbor added: " + neighbors.get(0).trajID_b);
+						//System.out.println("Added a neighbor!");
+						//System.out.println("Neighbor added: " + neighbors.get(0).trajID_b);
 					}
 				}
 			} else {
@@ -106,10 +106,10 @@ public class Trajectory {
 	boolean inRange(Trajectory t) {
 		float xDist = Math.abs(x - t.getX());
 		float yDist = Math.abs(y - t.getY());
-		System.out.println("xDist: " + xDist + " yDist: " + yDist);
+		//System.out.println("xDist: " + xDist + " yDist: " + yDist);
 		float distance = (float)Math.sqrt((double)(xDist*xDist + yDist*yDist));
-		System.out.println("distance: " + distance);
-		System.out.println("Maximum distance: " + (2*Constants.trajRadius/Math.cos(Math.PI/12)));
+		//System.out.println("distance: " + distance);
+		//System.out.println("Maximum distance: " + (2*Constants.trajRadius/Math.cos(Math.PI/12)));
 		if (distance <= (float)(2*Constants.trajRadius/Math.cos(Math.PI/6))) {
 			return true;
 		} else {
