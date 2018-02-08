@@ -17,8 +17,10 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Random;
 import java.util.Scanner;
 
 import javax.swing.Box;
@@ -32,14 +34,22 @@ import javax.swing.JTextField;
 import javax.swing.Timer;
 
 public class DrawPanel extends JPanel {
-	private List<Trajectory> trajList = new ArrayList();
-	private List<Trajectory> tempTrajList = new ArrayList();
-	private List<Robot> droneList = new ArrayList();
-	private Graphics g;
-	private float diam;
-	private int distBetweenTraj;
+	//private List<Trajectory> trajList = new ArrayList();
+	//private List<Trajectory> tempTrajList = new ArrayList();
+	//private List<Robot> droneList = new ArrayList();
+	//private Graphics g;
+	//private float diam;
+	//private int distBetweenTraj;
 	private boolean showEdges = false;
 	private ArrayList<Shape> robotShapes = new ArrayList<>();
+	
+	public static ArrayList<Data> generatedData = new ArrayList<Data>();					//to keep all the generated data
+	public static ArrayList<Data> fetchedData = new ArrayList<Data>();						//to keep the fetched data
+	public static ArrayList<Data> deliveredData = new ArrayList<Data>();					//to keep the delivered data
+	
+	public static ArrayList<Trajectory> trajectoryList = new ArrayList<Trajectory>();		//to keep the trajectories list
+	public static ArrayList<Robot> robotList = new ArrayList<Robot>();						//to keep the robots list
+	
 	
 	DrawPanel () {
 		// Adding timer which controls the timing and movement of things within the program
@@ -47,18 +57,55 @@ public class DrawPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (Constants.running) {
-					for(Robot r: Robot.robots) {
+					for(Robot r: robotList) {
 			    		r.move();
+			    		r.fetchData();
+			    		deliveredData.addAll(r.deliveryData());
 				    }
 				    
-				    for(Robot r: Robot.robots) {
-				    	r.logic();
+					int tempTotalDeliveredData = deliveredData.size(); 			//to check if any new data is delivered or not
+				    for(Robot r: robotList) {
+			    		r.logic();
 				    }
+				    
+				    
+				    if(deliveredData.size() != tempTotalDeliveredData){
+				    	System.out.println("Total Generated Data: "+generatedData.size());
+				    	System.out.println("Total Delivered Data: "+deliveredData.size());
+				    	System.out.println("Delivery Ratio: "+(double)deliveredData.size()/(double)generatedData.size());
+				    	long fetchingDelay = 0;
+				    	for(Data data:fetchedData){
+				    		fetchingDelay =+ data.getFetchingTime() - data.getCreationTime();
+				    	}
+				    	System.out.println("Average Fetching Delay: "+ ((double)fetchingDelay/fetchedData.size()));
+				    	long deliveryDelay = 0;
+				    	for(Data data:deliveredData){
+				    		deliveryDelay =+ data.getDeliveryTime() - data.getFetchingTime();
+				    	}
+				    	System.out.println("Average Delivery Delay: "+ ((double)deliveryDelay/deliveredData.size()));
+				    	long totalDelay = 0;
+				    	for(Data data:deliveredData){
+				    		totalDelay =+ data.getDeliveryTime() - data.getCreationTime();
+				    	}
+				    	System.out.println("Average Total Delay: "+ ((double)totalDelay/deliveredData.size()));
+				    }
+				    
+				    //for randomly creation of data with probability of 1%
+				    Random rand = new Random();
+					if(rand.nextDouble() > 0.99){
+						int dataSource = rand.nextInt(trajectoryList.size());
+						Data newData = new Data(trajectoryList.get(dataSource),trajectoryList.get(trajectoryList.size()-1),new Date().getTime()); 						//data from a random traj destined for the last traj
+						//Data newData = new Data(trajectoryList.get(dataSource),trajectoryList.get(rand.nextInt(trajectoryList.size())),new Date().getTime())			//data from a random traj destined for a random traj
+						trajectoryList.get(dataSource).addData(newData);
+						generatedData.add(newData);
+					}
 				}
+				
+				
 				repaint();
 			}
 		});
-		timer.start();
+		timer.start();	
 		
 		//click to remove drones
 		addMouseListener(new MouseAdapter() {
@@ -75,7 +122,7 @@ public class DrawPanel extends JPanel {
                 for (int i = 0; i < robotShapes.size(); i++) {
                 	Shape r = robotShapes.get(i);
                     if (r.contains(me.getPoint())) {//check if mouse is clicked within shape
-                        Robot.robots.remove(i); //not 100% on why this works -- might have some issues with IDs in the future
+                        robotList.remove(i); //not 100% on why this works -- might have some issues with IDs in the future
                     }
                 }
             }
@@ -112,7 +159,7 @@ public class DrawPanel extends JPanel {
 			id = Integer.parseInt(temp2);
 		}
 		
-		new Robot(Trajectory.trajectories.get(id-1), (float)(Math.toRadians(ang)));
+		new Robot(trajectoryList.get(id-1), (float)(Math.toRadians(ang)));
 		
 		//Robot r = new Robot(trajList.get(id - 1), ang);
 		//droneList.add(r);
@@ -122,7 +169,7 @@ public class DrawPanel extends JPanel {
 	public void createTraj(Graphics g) {
 		
 		//Adds first trajectory to list once
-		if(Trajectory.trajectories.size() == 0)
+		if(trajectoryList.size() == 0)
 		{
 			new Trajectory(0,0);
 			//trajList.add(new Trajectory(0, 0));
@@ -162,8 +209,8 @@ public class DrawPanel extends JPanel {
 			//Creates next trajectory
 			float distX = (float)(Math.cos(Math.toRadians(ang)) * (Constants.trajRadius*2 + 20));
 			float distY = (float)(Math.sin(Math.toRadians(ang)) * (Constants.trajRadius*2 + 20));
-			float newX = Trajectory.trajectories.get(id-1).getX() + distX;
-			float newY = Trajectory.trajectories.get(id-1).getY() + distY;
+			float newX = trajectoryList.get(id-1).getX() + distX;
+			float newY = trajectoryList.get(id-1).getY() + distY;
 			new Trajectory(newX, newY);
 			//trajList.add(new Trajectory(distX, distY));
 			//tempTrajList.add(new Trajectory(distX, distY));
@@ -200,10 +247,10 @@ public class DrawPanel extends JPanel {
 			rows = Integer.parseInt(temp1);
 			cols = Integer.parseInt(temp2);
 		}
-		
 	    //Makes each trajectory
-		float anchorX = -(cols-1)*(Constants.trajRadius*2 + Constants.trajPadding)/2;
-		float anchorY = -(rows-1)*(Constants.trajRadius*2 + Constants.trajPadding)/2;
+		float anchorX = -(cols-1)*(Constants.trajRadius*2 + 20)/2;
+		float anchorY = -(rows-1)*(Constants.trajRadius*2 + 20)/2;
+		
 		
 	    for(int r = 0; r < rows; r++)
 	    {
@@ -229,9 +276,9 @@ public class DrawPanel extends JPanel {
 				FileWriter fw = new FileWriter(filename, true);
 				BufferedWriter bw = new BufferedWriter(fw);
 				
-				for(int i = 0; i < Trajectory.trajectories.size(); i++)
+				for(int i = 0; i < trajectoryList.size(); i++)
 				{
-					Trajectory traj = Trajectory.trajectories.get(i);
+					Trajectory traj = trajectoryList.get(i);
 					bw.write(String.valueOf(traj.getX()));
 					bw.newLine();
 					bw.write(String.valueOf(traj.getY()));
@@ -240,9 +287,9 @@ public class DrawPanel extends JPanel {
 				//bw.newLine();
 				bw.write("R");
 				bw.newLine();
-				for(int j = 0; j < Robot.robots.size(); j++)
+				for(int j = 0; j < robotList.size(); j++)
 				{
-					Robot r = Robot.robots.get(j);
+					Robot r = robotList.get(j);
 					bw.write(String.valueOf(r.getTrajectory().getID()));
 					bw.newLine();
 					bw.write(String.valueOf(r.getAngle()));
@@ -287,7 +334,7 @@ public class DrawPanel extends JPanel {
 					else if(robots == true)
 					{
 						int trajID = Integer.parseInt(first);
-						Trajectory t = Trajectory.trajectories.get(trajID - 1);
+						Trajectory t = trajectoryList.get(trajID - 1);
 						float ang = Float.parseFloat(scan.next());
 			    		new Robot(t, ang);
 					}
@@ -315,20 +362,20 @@ public class DrawPanel extends JPanel {
 		if (result == JOptionPane.OK_OPTION) {
 			String temp1 = aField.getText();
 			int trajIndex = Integer.parseInt(temp1) - 1;
-			Trajectory selectedTraj = Trajectory.trajectories.get(trajIndex);
+			Trajectory selectedTraj = trajectoryList.get(trajIndex);
 			// get neighbors of trajectory that needs to removed
 			for (Neighbor n : selectedTraj.neighbors) {
 				System.out.println("Traj A: " + n.traj_a.getID()  + " | Traj B: " + n.traj_b.getID());
 				// remove the trajectory that wants to be removed from it's neighbors' neighbor arraylist
-				int trajbIndex = Trajectory.trajectories.indexOf(n.traj_b);
-				for (Neighbor neigh : Trajectory.trajectories.get(trajbIndex).neighbors) {
+				int trajbIndex = trajectoryList.indexOf(n.traj_b);
+				for (Neighbor neigh : trajectoryList.get(trajbIndex).neighbors) {
 					if (neigh.traj_b.equals(selectedTraj)) {
-						Trajectory.trajectories.get(trajbIndex).neighbors.remove(neigh);
+						trajectoryList.get(trajbIndex).neighbors.remove(neigh);
 						break;
 					}
 				}
 			}
-			Trajectory.trajectories.remove(Integer.parseInt(temp1) - 1);
+			trajectoryList.remove(Integer.parseInt(temp1) - 1);
 		}
 		
 	}
@@ -343,14 +390,59 @@ public class DrawPanel extends JPanel {
 	
 		
 	public void clear(){
-		Robot.robots.clear();
+		robotList.clear();
 		robotShapes.clear();
-		Trajectory.trajectories.clear();
-		diam = 0;
+		trajectoryList.clear();
+		//diam = 0;
 		repaint();
 	}
-	
+
+	//for adding data manually
 	public void addData(){
+		JTextField aField = new JTextField(5);
+		JTextField bField = new JTextField(5);
+		JPanel input = new JPanel();
+		input.setLayout(new BoxLayout(input, BoxLayout.Y_AXIS));
+
+		input.add(new JLabel("Enter the source trajectory ID"));
+		input.add(aField);
+		input.add(new JLabel("Enter the destination trajectory ID"));
+		input.add(bField);
+		
+		int result = JOptionPane.showConfirmDialog(null, input, "Add Data", JOptionPane.OK_CANCEL_OPTION);
+		if (result == JOptionPane.OK_OPTION) {
+			String temp1 = aField.getText();
+			String temp2 = bField.getText();
+			Trajectory source = null;
+			Trajectory destination = null;
+			for(Trajectory t:trajectoryList){
+				if(t.getID() == Integer.parseInt(temp1)){
+					source = t;
+				}	
+				if(t.getID() == Integer.parseInt(temp2)){
+					destination = t;
+				}
+			}
+			if(source != null && destination != null){
+				Data newData = new Data(source,destination,new Date().getTime()); 						////data from the source traj to the destination traj
+				source.addData(newData);
+				generatedData.add(newData);
+			} else {
+				JPanel error = new JPanel();
+				input.setLayout(new BoxLayout(input, BoxLayout.Y_AXIS));
+				if(source == null){
+					error.add(new JLabel("Wrong source"));
+				} else {
+					error.add(new JLabel("Wrong destination"));
+				}
+				JOptionPane.showConfirmDialog(null, error, "Add Data Error", JOptionPane.CLOSED_OPTION);
+			}
+		}
+		
+		
+	}
+	
+	/*public void addData(){
 		JTextField aField = new JTextField(5);
 		JPanel input = new JPanel();
 		input.setLayout(new BoxLayout(input, BoxLayout.Y_AXIS));
@@ -361,15 +453,15 @@ public class DrawPanel extends JPanel {
 		int result = JOptionPane.showConfirmDialog(null, input, "Add Data", JOptionPane.OK_CANCEL_OPTION);
 		if (result == JOptionPane.OK_OPTION) {
 			String temp1 = aField.getText();
-			for(Robot r:Robot.robots){
+			for(Robot r:robotList){
 				if(r.getID() == Integer.parseInt(temp1)){
 					r.setData(true);
 				}
 			}
 		}
-	}
+	}*/
 	
-	public void removeData(){
+	/*public void removeData(){
 		JTextField aField = new JTextField(5);
 		JPanel input = new JPanel();
 		input.setLayout(new BoxLayout(input, BoxLayout.Y_AXIS));
@@ -380,13 +472,13 @@ public class DrawPanel extends JPanel {
 		int result = JOptionPane.showConfirmDialog(null, input, "Remove Data", JOptionPane.OK_CANCEL_OPTION);
 		if (result == JOptionPane.OK_OPTION) {
 			String temp1 = aField.getText();
-			for(Robot r:Robot.robots){
+			for(Robot r:robotList){
 				if(r.getID() == Integer.parseInt(temp1)){
 					r.setData(false);
 				}
 			}
 		}
-	}
+	}*/
 	
 	@Override
 	public void paintComponent(Graphics g) {
@@ -399,22 +491,25 @@ public class DrawPanel extends JPanel {
 	    float pixelRatio;	// Creating the pixel ratio, which is the number of pixels divided by the number of units for the window size
 	    pixelRatio = (float)(Math.min(getHeight(), getWidth())/800.0);
 	    
-	    for(Trajectory n : Trajectory.trajectories) {
+	    for(Trajectory n : trajectoryList) {
 	    		if (n.getDir() == 1) {
 	    			g.setColor(Color.RED);
 	    		} else {
 	    			g.setColor(Color.BLUE);
 	    		}
 	    		g.drawOval((int)(n.getX()*pixelRatio + getWidth()/2 - Constants.trajRadius*pixelRatio), (int)(getHeight()/2 - n.getY()*pixelRatio - Constants.trajRadius*pixelRatio), (int)(Constants.trajRadius*2.0*pixelRatio), (int)(Constants.trajRadius*2.0*pixelRatio));
-	    		g.drawString("" + (Trajectory.trajectories.indexOf(n)+1), (int)(n.getX()*pixelRatio + getWidth()/2), (int)(getHeight()/2 - n.getY()*pixelRatio));
+	    		
+	    		if (n.dataSize() > 1)
+	    			g.setColor(Color.GREEN);
+	    		g.drawString("" + (n.getID()), (int)(n.getX()*pixelRatio + getWidth()/2), (int)(getHeight()/2 - n.getY()*pixelRatio));
 	    }
 	    
-	    for(Robot r: Robot.robots) {
-	    		if(!r.hasData()){
-	    			g.setColor(Color.BLACK);
+	    for(Robot r: robotList) {
+	    		if(r.getData().size()>0){
+	    			g.setColor(Color.BLUE);
 	    		}
 	    		else{
-	    			g.setColor(Color.BLUE);
+	    			g.setColor(Color.BLACK);
 	    		}
 	    		g.fillOval((int)(r.getX()*pixelRatio + getWidth()/2-Constants.scale*Constants.trajPadding/2), (int)(getHeight()/2 - r.getY()*pixelRatio-Constants.scale*Constants.trajPadding/2), (int)(Constants.scale*Constants.trajPadding), (int)(Constants.scale*Constants.trajPadding));
 	    		robotShapes.add(new Ellipse2D.Double((int)(r.getX()*pixelRatio + getWidth()/2-Constants.scale*Constants.trajPadding/2), (int)(getHeight()/2 - r.getY()*pixelRatio-Constants.scale*Constants.trajPadding/2), (int)(Constants.scale*Constants.trajPadding), (int)(Constants.scale*Constants.trajPadding)));
@@ -423,7 +518,7 @@ public class DrawPanel extends JPanel {
 	    // show/hide edges
 	    if (showEdges) {
 	    	g.setColor(Color.BLACK);
-	    	for(Trajectory trajectory : Trajectory.trajectories) {
+	    	for(Trajectory trajectory : trajectoryList) {
 	    		for(Neighbor neighbor : trajectory.neighbors) {
 	    			//System.out.println("TRAJ_A: " + neighbor.traj_a.getID() + " | TRAJ_B: " + neighbor.traj_b.getID());
 	    			g.drawLine((int)(neighbor.traj_a.getX()*pixelRatio + getWidth()/2), (int)(getHeight()/2 - neighbor.traj_a.getY()*pixelRatio), (int)(neighbor.traj_b.getX()*pixelRatio + getWidth()/2), (int)(getHeight()/2 - neighbor.traj_b.getY()*pixelRatio));
