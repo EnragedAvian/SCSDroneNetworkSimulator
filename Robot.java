@@ -348,7 +348,7 @@ public class Robot {
 		if(this.getTrajectory().dataSize() > 0){
 			ArrayList<Data> dataFromTraj = this.getTrajectory().sendData();
 			for(Data data:dataFromTraj){
-				data.setFetchingTime(new Date().getTime());
+				data.setFetchingTime(System.currentTimeMillis());
 				data.setFetchedStatus(true);
 			}
 			dataList.addAll(dataFromTraj);
@@ -375,7 +375,7 @@ public class Robot {
 		//int delivered = 0;
 		while(i < dataList.size())
 			if(dataList.get(i).getDestTraj() == this.getTrajectory()){
-				dataList.get(i).setDeliveryTime(new Date().getTime());
+				dataList.get(i).setDeliveryTime(System.currentTimeMillis());
 				delivered.add(dataList.remove(i));
 			}
 			else
