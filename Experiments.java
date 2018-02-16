@@ -1,9 +1,9 @@
 import java.util.ArrayList;
 
 public class Experiments {
-	static ArrayList<Integer> log = new ArrayList<Integer>();
+	static ArrayList<Long> log = new ArrayList<Long>();
 	
-	static void addToLog(int snapshot) {
+	static void addToLog(long snapshot) {
 		if (log.size() == 0)
 			log.add(snapshot);
 		else if (log.get(log.size()-1) == snapshot) { // last entry was the same entry
