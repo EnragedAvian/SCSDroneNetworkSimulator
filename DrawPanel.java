@@ -66,13 +66,8 @@ public class DrawPanel extends JPanel {
 			    		r.fetchData();
 			    		deliveredData.addAll(r.deliveryData());
 				    }
-				    
-					int tempTotalDeliveredData = deliveredData.size(); 			//to check if any new data is delivered or not
-				    for(Robot r: robotList) {
-			    		r.logic();
-				    }
-
-				    // if the current robot is within the detection range of the 4 compass points
+					
+					// if the current robot is within the detection range of the 4 compass points
 					if(Math.abs(robotList.get(0).getAngle()-0) < 0.01 || Math.abs(robotList.get(0).getAngle()-(Math.PI/2)) < 0.01 || Math.abs(robotList.get(0).getAngle() - Math.PI) < 0.01 || Math.abs(robotList.get(0).getAngle() - (3*Math.PI/2)) < 0.01 || Math.abs(robotList.get(0).getAngle() - (2*Math.PI)) < 0.01) {
 						//System.out.println("Robot switched from trajectory: " + checking.traj_a.getID() + " to trajectory: " + t.getID());
 						System.out.println("Occupied Trajectory ID's & Angles ");
@@ -108,6 +103,11 @@ public class DrawPanel extends JPanel {
 						Experiments.printLog();
 						System.out.println();
 					}
+				    
+					int tempTotalDeliveredData = deliveredData.size(); 			//to check if any new data is delivered or not
+				    for(Robot r: robotList) {
+			    		r.logic();
+				    }   
 				    
 				    
 				    if(deliveredData.size() != tempTotalDeliveredData){

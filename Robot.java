@@ -271,9 +271,44 @@ public class Robot {
 		
 		//System.out.println("Logic function for robot on traj: " + t.getID() + " with angle: " + angle);
 		
-		
-		
-		
+
+//		// if the current robot is within the detection range of the 4 compass points
+//		if(Math.abs(angle-0) < 0.01 || Math.abs(angle-(Math.PI/2)) < 0.01 || Math.abs(angle - Math.PI) < 0.01 || Math.abs(angle - (3*Math.PI/2)) < 0.01 || Math.abs(angle - (2*Math.PI)) < 0.01) {
+//			//System.out.println("Robot switched from trajectory: " + checking.traj_a.getID() + " to trajectory: " + t.getID());
+//			System.out.println("Occupied Trajectory ID's & Angles ");
+//			Map<Integer, Integer> occupiedTrajs = new TreeMap<Integer, Integer>(); // <trajID, linkePointNum> corresponding to angle
+//			for (int i=0; i<DrawPanel.robotList.size(); i++) {
+//				int linkPointNum = -1;
+//				float droneAngle = DrawPanel.robotList.get(i).getAngle();
+//				if (Math.abs(droneAngle-0) < 0.01 || Math.abs(droneAngle - (2*Math.PI)) < 0.01) {
+//					linkPointNum = 1; // angle = 0
+//				}
+//				else if (Math.abs(droneAngle-(Math.PI/2)) < 0.01) {
+//					linkPointNum = 2; // angle = PI/2
+//				}
+//				else if (Math.abs(droneAngle-Math.PI) < 0.01) {
+//					linkPointNum = 3; // angle = PI
+//				}
+//				else if (Math.abs(droneAngle-(3*Math.PI/2)) < 0.01) {
+//					linkPointNum = 4; // angle = 3PI/2
+//				}
+//				occupiedTrajs.put(DrawPanel.robotList.get(i).getTrajectory().getID()-1, linkPointNum);
+//			}
+//			Set set = occupiedTrajs.entrySet();
+//			Iterator iterator = set.iterator();
+//			int snapshot = 0;
+//			while(iterator.hasNext()) {
+//				Map.Entry me = (Map.Entry)iterator.next();
+//				System.out.print(me.getKey() + ": ");
+//				System.out.println(me.getValue());
+//				snapshot += Math.pow(10, Double.parseDouble(me.getKey()+"")) * Double.parseDouble(me.getValue()+""); // the place value = trajectory id & the digit = angle on the trajectory 
+//			}
+//			System.out.println("Snapshot: " + snapshot); // integer representing the drones in trajectories and the angles in the trajectories
+//			Experiments.addToLog(snapshot);
+//			Experiments.printLog();
+//			System.out.println();
+//		}
+
 	}
   
 	int getID() {
