@@ -18,10 +18,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.Set;
+import java.util.TreeMap;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -67,6 +71,43 @@ public class DrawPanel extends JPanel {
 				    for(Robot r: robotList) {
 			    		r.logic();
 				    }
+
+				    // if the current robot is within the detection range of the 4 compass points
+					if(Math.abs(robotList.get(0).getAngle()-0) < 0.01 || Math.abs(robotList.get(0).getAngle()-(Math.PI/2)) < 0.01 || Math.abs(robotList.get(0).getAngle() - Math.PI) < 0.01 || Math.abs(robotList.get(0).getAngle() - (3*Math.PI/2)) < 0.01 || Math.abs(robotList.get(0).getAngle() - (2*Math.PI)) < 0.01) {
+						//System.out.println("Robot switched from trajectory: " + checking.traj_a.getID() + " to trajectory: " + t.getID());
+						System.out.println("Occupied Trajectory ID's & Angles ");
+						Map<Integer, Integer> occupiedTrajs = new TreeMap<Integer, Integer>(); // <trajID, linkePointNum> corresponding to angle
+						for (int i=0; i<DrawPanel.robotList.size(); i++) {
+							int linkPointNum = -1;
+							float droneAngle = DrawPanel.robotList.get(i).getAngle();
+							if (Math.abs(droneAngle-0) < 0.01 || Math.abs(droneAngle - (2*Math.PI)) < 0.01) {
+								linkPointNum = 1; // angle = 0
+							}
+							else if (Math.abs(droneAngle-(Math.PI/2)) < 0.01) {
+								linkPointNum = 2; // angle = PI/2
+							}
+							else if (Math.abs(droneAngle-Math.PI) < 0.01) {
+								linkPointNum = 3; // angle = PI
+							}
+							else if (Math.abs(droneAngle-(3*Math.PI/2)) < 0.01) {
+								linkPointNum = 4; // angle = 3PI/2
+							}
+							occupiedTrajs.put(DrawPanel.robotList.get(i).getTrajectory().getID()-1, linkPointNum);
+						}
+						Set set = occupiedTrajs.entrySet();
+						Iterator iterator = set.iterator();
+						int snapshot = 0;
+						while(iterator.hasNext()) {
+							Map.Entry me = (Map.Entry)iterator.next();
+							System.out.print(me.getKey() + ": ");
+							System.out.println(me.getValue());
+							snapshot += Math.pow(10, Double.parseDouble(me.getKey()+"")) * Double.parseDouble(me.getValue()+""); // the place value = trajectory id & the digit = angle on the trajectory 
+						}
+						System.out.println("Snapshot: " + snapshot); // integer representing the drones in trajectories and the angles in the trajectories
+						Experiments.addToLog(snapshot);
+						Experiments.printLog();
+						System.out.println();
+					}
 				    
 				    
 				    if(deliveredData.size() != tempTotalDeliveredData){
@@ -75,17 +116,17 @@ public class DrawPanel extends JPanel {
 				    	System.out.println("Delivery Ratio: "+(double)deliveredData.size()/(double)generatedData.size());
 				    	long fetchingDelay = 0;
 				    	for(Data data:fetchedData){
-				    		fetchingDelay =+ data.getFetchingTime() - data.getCreationTime();
+				    		fetchingDelay += data.getFetchingTime() - data.getCreationTime();
 				    	}
 				    	System.out.println("Average Fetching Delay: "+ ((double)fetchingDelay/fetchedData.size()));
 				    	long deliveryDelay = 0;
 				    	for(Data data:deliveredData){
-				    		deliveryDelay =+ data.getDeliveryTime() - data.getFetchingTime();
+				    		deliveryDelay += data.getDeliveryTime() - data.getFetchingTime();
 				    	}
 				    	System.out.println("Average Delivery Delay: "+ ((double)deliveryDelay/deliveredData.size()));
 				    	long totalDelay = 0;
 				    	for(Data data:deliveredData){
-				    		totalDelay =+ data.getDeliveryTime() - data.getCreationTime();
+				    		totalDelay += data.getDeliveryTime() - data.getCreationTime();
 				    	}
 				    	System.out.println("Average Total Delay: "+ ((double)totalDelay/deliveredData.size()));
 				    }
@@ -94,8 +135,8 @@ public class DrawPanel extends JPanel {
 				    Random rand = new Random();
 					if(rand.nextDouble() > 0.99){
 						int dataSource = rand.nextInt(trajectoryList.size());
-						Data newData = new Data(trajectoryList.get(dataSource),trajectoryList.get(trajectoryList.size()-1),new Date().getTime()); 						//data from a random traj destined for the last traj
-						//Data newData = new Data(trajectoryList.get(dataSource),trajectoryList.get(rand.nextInt(trajectoryList.size())),new Date().getTime())			//data from a random traj destined for a random traj
+						Data newData = new Data(trajectoryList.get(dataSource),trajectoryList.get(trajectoryList.size()-1),System.currentTimeMillis()); 						//data from a random traj destined for the last traj
+						//Data newData = new Data(trajectoryList.get(dataSource),trajectoryList.get(rand.nextInt(trajectoryList.size())),System.currentTimeMillis())			//data from a random traj destined for a random traj
 						trajectoryList.get(dataSource).addData(newData);
 						generatedData.add(newData);
 					}
@@ -424,7 +465,7 @@ public class DrawPanel extends JPanel {
 				}
 			}
 			if(source != null && destination != null){
-				Data newData = new Data(source,destination,new Date().getTime()); 						////data from the source traj to the destination traj
+				Data newData = new Data(source,destination,System.currentTimeMillis()); 						////data from the source traj to the destination traj
 				source.addData(newData);
 				generatedData.add(newData);
 			} else {
