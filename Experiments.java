@@ -4,16 +4,12 @@ public class Experiments {
 	static ArrayList<Long> log = new ArrayList<Long>();
 	
 	static void addToLog(long snapshot) {
-		if (log.size() == 0)
-			log.add(snapshot);
-		else if (log.get(log.size()-1) == snapshot) { // last entry was the same entry
-			log.remove(log.size()-1);
-			if (log.contains(snapshot))
-				System.out.println("Period is: " + log.size());
-			log.add(snapshot);
-		}
-		else
-			log.add(snapshot);
+		for(int i=log.size()-1;i>=0;i--)
+			if (log.get(i) == snapshot) { //to find the period 
+				System.out.println("Period is: " + (int)(log.size()-i));
+				break;
+			}
+		log.add(snapshot);
 	}
 	
 	static void printLog() {
