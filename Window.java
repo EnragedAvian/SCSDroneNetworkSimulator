@@ -86,6 +86,7 @@ public class Window extends JFrame implements ActionListener{
 			DrawPanel.robotList.clear();
 			new Robot(DrawPanel.trajectoryList.get(0), 0);
 			DrawPanel.trajectoryList.get(0).populateNeighbors();
+			Experiments.clear();
 			repaint();
 		}
 		

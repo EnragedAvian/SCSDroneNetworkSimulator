@@ -164,6 +164,7 @@ public class DrawPanel extends JPanel {
                 	Shape r = robotShapes.get(i);
                     if (r.contains(me.getPoint())) {//check if mouse is clicked within shape
                         robotList.remove(i); //not 100% on why this works -- might have some issues with IDs in the future
+                        Experiments.clear();
                     }
                 }
             }
@@ -300,6 +301,8 @@ public class DrawPanel extends JPanel {
 	    		new Trajectory(anchorX + c*(Constants.trajRadius*2 + Constants.trajPadding), anchorY + r*(Constants.trajRadius*2 + Constants.trajPadding));
 	    	}
 	    }
+	    
+	    Experiments.clear();
 	}
 	
 	public void saveGrid(){
@@ -434,6 +437,7 @@ public class DrawPanel extends JPanel {
 		robotList.clear();
 		robotShapes.clear();
 		trajectoryList.clear();
+		Experiments.clear();
 		//diam = 0;
 		repaint();
 	}
@@ -525,8 +529,13 @@ public class DrawPanel extends JPanel {
 	public void paintComponent(Graphics g) {
 		robotShapes.clear();
 	    super.paintComponent( g ); // call superclass's paintComponent
-	    Graphics2D g2 = ( Graphics2D ) g; // cast g to Graphics2D  
+	    Graphics2D g2 = ( Graphics2D ) g; // cast g to Graphics2D
+	    
 	    g.drawString("Drone Simulator", 50, 50);
+	    g.drawString("Period: " + Experiments.period, 50, 60);
+	    g.drawString("Snapshot: " + Experiments.snap, 50, 70);
+	    g.drawString("Increments: " + Experiments.log.size(), 50, 80);
+
 	    //g2.scale(Constants.scale, Constants.scale);
 	    //g2.translate(Constants.translation, .5*Constants.translation);
 	    float pixelRatio;	// Creating the pixel ratio, which is the number of pixels divided by the number of units for the window size
