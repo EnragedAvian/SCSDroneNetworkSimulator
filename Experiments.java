@@ -1,23 +1,25 @@
 import java.util.ArrayList;
 
 public class Experiments {
-	static ArrayList<Integer> log = new ArrayList<Integer>();
-	static int period = -1;
-	static int snap = -1;
+	static ArrayList<ArrayList<Integer>> log = new ArrayList<ArrayList<Integer>>();
+	static long period = -1;
+	public static ArrayList<Integer> snap;
 	
-	static void addToLog(int snapshot) {
-		snap = snapshot;
-		if (log.size() == 0)
-			log.add(snapshot);
-		else if (log.contains(snapshot)) { // last entry was the same entry
-			//log.remove(log.size()-1);
-			System.out.println("Period is: " + log.size());
-			period = log.size();
-			log.clear();
-			log.add(snapshot);
+	static void addToLog(ArrayList<Integer> snapshot) {
+		for(int i=log.size()-1;i>=0;i--) {
+			boolean periodCheck = true;
+			for(int j=0;j<snapshot.size();j++)
+				if(snapshot.get(j) != log.get(i).get(j))
+					periodCheck = false;
+			
+			if (periodCheck) { //to find the period
+				period = log.size()-i;
+				System.out.println("Period is: " + period);
+				break;
+			}
 		}
-		else
-			log.add(snapshot);
+		log.add(snapshot);
+		snap = snapshot;
 	}
 	
 	static void printLog() {
@@ -27,9 +29,8 @@ public class Experiments {
 		}
 	}
 	
-	public static void clear(){
+	public static void clear() {
 		log.clear();
 		period = -1;
 	}
-
 }

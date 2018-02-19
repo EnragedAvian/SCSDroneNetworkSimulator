@@ -91,12 +91,26 @@ public class DrawPanel extends JPanel {
 						}
 						Set set = occupiedTrajs.entrySet();
 						Iterator iterator = set.iterator();
-						int snapshot = 0;
-						while(iterator.hasNext()) {
-							Map.Entry me = (Map.Entry)iterator.next();
-							System.out.print(me.getKey() + ": ");
-							System.out.println(me.getValue());
-							snapshot += Math.pow(10, Double.parseDouble(me.getKey()+"")) * Double.parseDouble(me.getValue()+""); // the place value = trajectory id & the digit = angle on the trajectory 
+						ArrayList<Integer> snapshot = new ArrayList<Integer>();
+//						while(iterator.hasNext()) {
+//							Map.Entry me = (Map.Entry)iterator.next();
+//							System.out.print(Integer.parseInt(me.getKey()+"")+1 + ": ");
+//							System.out.println(me.getValue());
+//							//snapshot += Math.pow(10, Double.parseDouble(me.getKey()+"")) * Double.parseDouble(me.getValue()+""); // the place value = trajectory id & the digit = angle on the trajectory
+//							snapshot.add(Integer.parseInt(me.getValue()+""));
+//						}
+						Map.Entry me = (Map.Entry)iterator.next();
+						for(int i=0;i<trajectoryList.size();i++){
+							if((int)me.getKey() == i){
+								System.out.print(Integer.parseInt(me.getKey()+"")+1 + ": ");
+								System.out.println(me.getValue());
+								snapshot.add(Integer.parseInt(me.getValue()+""));
+								if(iterator.hasNext()){
+									me = (Map.Entry)iterator.next();
+								}
+							} else {
+								snapshot.add(0);
+							}
 						}
 						System.out.println("Snapshot: " + snapshot); // integer representing the drones in trajectories and the angles in the trajectories
 						Experiments.addToLog(snapshot);
@@ -529,13 +543,12 @@ public class DrawPanel extends JPanel {
 	public void paintComponent(Graphics g) {
 		robotShapes.clear();
 	    super.paintComponent( g ); // call superclass's paintComponent
-	    Graphics2D g2 = ( Graphics2D ) g; // cast g to Graphics2D
-	    
+	    Graphics2D g2 = ( Graphics2D ) g; // cast g to Graphics2D  
 	    g.drawString("Drone Simulator", 50, 50);
 	    g.drawString("Period: " + Experiments.period, 50, 60);
 	    g.drawString("Snapshot: " + Experiments.snap, 50, 70);
 	    g.drawString("Increments: " + Experiments.log.size(), 50, 80);
-
+	    
 	    //g2.scale(Constants.scale, Constants.scale);
 	    //g2.translate(Constants.translation, .5*Constants.translation);
 	    float pixelRatio;	// Creating the pixel ratio, which is the number of pixels divided by the number of units for the window size
