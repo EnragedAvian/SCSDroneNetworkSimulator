@@ -1,6 +1,7 @@
 //  Robot class which handles the creation and motion of robots on screen.
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -20,7 +21,7 @@ public class Robot {
 	private int ID;
 	private Neighbor checking;	// ID of the trajectory we want to be checking
 	private boolean hasData = false;
-	
+		
 	/*private Thread thread;
 	private String threadName;*/
 	
@@ -30,10 +31,13 @@ public class Robot {
 	boolean checked;   // boolean stating SOMETHING
 	boolean swapped;
 	int rangeState;  // Integer determining what range the robot is in, affecting the logic
-	
-	public static ArrayList<Robot> robots = new ArrayList<Robot>();
+  
+	private ArrayList<Data> dataList;           //for keeping data
+//	public static ArrayList<Robot> robots = new ArrayList<Robot>();
   
 	Robot(Trajectory traj, float ang){
+		dataList = new ArrayList<Data>();                      //for keeping data
+
 		angle = ang;
 		t = traj;
 		// TODO add logic so that robot is given ID of trajectory if the program hasn't started, but is assigned the next value in the sequence if the program has already started
@@ -41,7 +45,7 @@ public class Robot {
 		transitioningIn = false;
 		transitioningOut = false;
 		radius = Constants.trajRadius;
-		robots.add(this);
+		DrawPanel.robotList.add(this);
 		/*threadName = "Robot " + ID;*/
 		
 		/*if (Constants.running) {
@@ -59,7 +63,7 @@ public class Robot {
 		timer.start();*/
 		
 	}
-	
+  
 	float getRadius(){
 		return radius;
 	}
@@ -67,15 +71,15 @@ public class Robot {
 	void setRadius(float rval){
 		radius = rval;
 	}
-  
+	
 	boolean checkNeighbor(Trajectory traj) {  // Checks the range between robot and neighbor in specified trajectory
 		// TODO Add logic keeping track of how many times neighbor has been passed
 		//System.out.println("checkNeighbor function called");
-		for (int i = 0; i<robots.size(); i++) {  // For every robot
-			if ((robots.get(i).getID()!=this.getID())&&(robots.get(i).getTrajectory().getID() == traj.getID())) {  // If the robot is not the same as the other robot
+		for (int i = 0; i<DrawPanel.robotList.size(); i++) {  // For every robot
+			if ((DrawPanel.robotList.get(i).getID()!=this.getID())&&(DrawPanel.robotList.get(i).getTrajectory().getID() == traj.getID())) {  // If the robot is not the same as the other robot
 				//System.out.println("Found another robot!");
-				float xDist = Math.abs(this.getX() - robots.get(i).getX());
-				float yDist = Math.abs(this.getY() - robots.get(i).getY());
+				float xDist = Math.abs(this.getX() - DrawPanel.robotList.get(i).getX());
+				float yDist = Math.abs(this.getY() - DrawPanel.robotList.get(i).getY());
 				float dist = (float)Math.sqrt((double)(xDist*xDist + yDist*yDist));
 				if (dist <= (Constants.wifiRange + 5)) {	// added small buffer to ensure that robots are detected properly if they are within range
 					return true;
@@ -109,7 +113,7 @@ public class Robot {
 		}
 	}
   
-	void logic() {		
+	void logic() {
 		if (t.getDir() == 1) {  // Checking direction of robot on trajectory
     
 			// Adding new definition of rangeState, which allows easy determination of what range the robot is in
@@ -148,11 +152,22 @@ public class Robot {
 				break;
 			case 1:
 				if(!checked) {
+
+					int secondTrajID = checking.getSecondTraj().getID();
+					Robot toSendRobot = null;
+					for(Robot robots:DrawPanel.robotList){
+						if(robots.getTrajectory().getID() == secondTrajID)
+							toSendRobot = robots;
+					}
+					if(toSendRobot != null){
+						sendData(toSendRobot);					
+						DrawPanel.deliveredData.addAll(toSendRobot.deliveryData());
+					}
 					detected = checkNeighbor(checking.traj_b);
 					if (!detected) {
 						transitioningIn = true;
 					}
-					checked = true;				
+					checked = true;
 				}
 				break;
 			case 2:
@@ -166,10 +181,12 @@ public class Robot {
 					angle = Constants.normalizeAngle(checking.angle_b-(Constants.normalizeAngle(angle-checking.angle_a)));
 					//System.out.println("Old Trajectory is: " + t.getID());
 					t = checking.traj_b;
-					//System.out.println("New Trajectory is: " + t.getID());					
+					DrawPanel.deliveredData.addAll(this.deliveryData());
+					//System.out.println("New Trajectory is: " + t.getID());
 				}
 				checked = false;
 				break;
+			
 			case 3:
 				radius = (float)(Constants.trajRadius/Math.cos((double)Constants.normalizeAngle(checking.transitionOut_a-angle)));
 				checked = false;
@@ -212,11 +229,21 @@ public class Robot {
 		        break;
 			case 1:
 				if(!checked) {
-		        		detected = checkNeighbor(checking.traj_b);
-		        		if (!detected) {
-		        			transitioningIn = true;
-		        		}
-		        		checked = true;
+					int secondTrajID = checking.getSecondTraj().getID();
+					Robot toSendRobot = null;
+					for(Robot robots:DrawPanel.robotList){
+						if(robots.getTrajectory().getID() == secondTrajID)
+							toSendRobot = robots;
+					}
+					if(toSendRobot != null){
+						sendData(toSendRobot);					
+						DrawPanel.deliveredData.addAll(toSendRobot.deliveryData());
+					}
+					detected = checkNeighbor(checking.traj_b);
+					if (!detected) {
+						transitioningIn = true;
+					}
+					checked = true;
 				}
 				break;
 			case 2:
@@ -230,7 +257,8 @@ public class Robot {
 					angle = Constants.normalizeAngle(checking.angle_b-(Constants.normalizeAngle(angle-checking.angle_a)));
 					//System.out.println("Old Trajectory is: " + t.getID());
 					t = checking.traj_b;
-					//System.out.println("New Trajectory is: " + t.getID());				
+					DrawPanel.deliveredData.addAll(this.deliveryData());
+					//System.out.println("New Trajectory is: " + t.getID());
 				}
 				checked = false;
 				break;
@@ -242,46 +270,6 @@ public class Robot {
 		}
 		
 		//System.out.println("Logic function for robot on traj: " + t.getID() + " with angle: " + angle);
-		
-		
-		
-		// if the current robot is within the detection range of the 4 compass points
-		if(Math.abs(angle-0) < 0.01 || Math.abs(angle-(Math.PI/2)) < 0.01 || Math.abs(angle - Math.PI) < 0.01 || Math.abs(angle - (3*Math.PI/2)) < 0.01 || Math.abs(angle - (2*Math.PI)) < 0.01) {
-			//System.out.println("Robot switched from trajectory: " + checking.traj_a.getID() + " to trajectory: " + t.getID());
-			System.out.println("Occupied Trajectory ID's & Angles ");
-			Map<Integer, Integer> occupiedTrajs = new TreeMap<Integer, Integer>(); // <trajID, linkePointNum> corresponding to angle
-			for (int i=0; i<robots.size(); i++) {
-				int linkPointNum = -1;
-				float droneAngle = robots.get(i).getAngle();
-				if (Math.abs(droneAngle-0) < 0.01 || Math.abs(droneAngle - (2*Math.PI)) < 0.01) {
-					linkPointNum = 1; // angle = 0
-				}
-				else if (Math.abs(droneAngle-(Math.PI/2)) < 0.01) {
-					linkPointNum = 2; // angle = PI/2
-				}
-				else if (Math.abs(droneAngle-Math.PI) < 0.01) {
-					linkPointNum = 3; // angle = PI
-				}
-				else if (Math.abs(droneAngle-(3*Math.PI/2)) < 0.01) {
-					linkPointNum = 4; // angle = 3PI/2
-				}
-				occupiedTrajs.put(robots.get(i).getTrajectory().getID()-1, linkPointNum);
-			}
-			 Set set = occupiedTrajs.entrySet();
-	         Iterator iterator = set.iterator();
-	         int snapshot = 0;
-	         while(iterator.hasNext()) {
-	              Map.Entry me = (Map.Entry)iterator.next();
-	              System.out.print(me.getKey() + ": ");
-	              System.out.println(me.getValue());
-	              snapshot += Math.pow(10, Double.parseDouble(me.getKey()+"")) * Double.parseDouble(me.getValue()+""); // the place value = trajectory id & the digit = angle on the trajectory 
-	         }
-	         System.out.println("Snapshot: " + snapshot); // integer representing the drones in trajectories and the angles in the trajectories
-	         Experiments.addToLog(snapshot);
-             Experiments.printLog();
-             System.out.println();
-		}
-		
 		
 	}
   
@@ -309,11 +297,106 @@ public class Robot {
 		return angle;
 	}
   
-	void setData(boolean b){
+	/*void setData(boolean b){
 		hasData = b;
+	}*/
+	
+	/*boolean hasData(){
+		return hasData;
+	}*/
+	
+	//fetching data from trajectory
+	void fetchData(){
+		if(this.getTrajectory().dataSize() > 0){
+			ArrayList<Data> dataFromTraj = this.getTrajectory().sendData();
+			for(Data data:dataFromTraj){
+				data.setFetchingTime(System.currentTimeMillis());
+				data.setFetchedStatus(true);
+			}
+			dataList.addAll(dataFromTraj);
+			DrawPanel.fetchedData.addAll(dataFromTraj);
+		}
+		DrawPanel.deliveredData.addAll(deliveryData());
 	}
 	
-	boolean hasData(){
-		return hasData;
+	//returning all data that drone carries
+	ArrayList<Data> getData(){
+		return dataList;
 	}
+	
+	//reset the data
+	void setData(ArrayList<Data> data){
+		 dataList.clear();
+		 dataList.addAll(data);
+	}
+	
+	//check for delivery
+	ArrayList<Data> deliveryData(){
+		ArrayList<Data> delivered = new ArrayList<Data>();
+		int i=0;
+		//int delivered = 0;
+		while(i < dataList.size())
+			if(dataList.get(i).getDestTraj() == this.getTrajectory()){
+				dataList.get(i).setDeliveryTime(System.currentTimeMillis());
+				delivered.add(dataList.remove(i));
+			}
+			else
+				i++;		
+		return delivered;
+	}
+	
+	//clear the data list
+	void clearData(){
+		dataList.clear();
+	}
+	
+	//receive data from another drone
+	void receiveData(ArrayList<Data> data){
+		this.dataList.addAll(data);
+	}
+	
+	//send data to another drone
+	void sendData(Robot secondRobot){
+		ArrayList<Data> dataToSend = new ArrayList<Data>();
+		if(secondRobot.getTrajectory().getX() > this.getTrajectory().getX()){
+			int i=0;
+			while(i<dataList.size()){
+				if(dataList.get(i).getDestTraj().getX() > this.getTrajectory().getX()){
+					dataToSend.add(dataList.remove(i));
+				} else {
+					i++;
+				}
+			}
+		} else if(secondRobot.getTrajectory().getX() < this.getTrajectory().getX()){
+			int i=0;
+			while(i<dataList.size()){
+				if(dataList.get(i).getDestTraj().getX() < this.getTrajectory().getX()){
+					dataToSend.add(dataList.remove(i));
+				} else {
+					i++;
+				}
+			}
+		} else if(secondRobot.getTrajectory().getY() > this.getTrajectory().getY()){
+			int i=0;
+			while(i<dataList.size()){
+				if(dataList.get(i).getDestTraj().getY() > this.getTrajectory().getY()){
+					dataToSend.add(dataList.remove(i));
+				} else {
+					i++;
+				}
+			}
+		} else {
+			int i=0;
+			while(i<dataList.size()){
+				if(dataList.get(i).getDestTraj().getX() < this.getTrajectory().getX()){
+					dataToSend.add(dataList.remove(i));
+				} else {
+					i++;
+				}
+			}
+		}
+		secondRobot.receiveData(dataToSend);
+	}
+	
+	
 }

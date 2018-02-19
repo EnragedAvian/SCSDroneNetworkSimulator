@@ -90,4 +90,10 @@ public class Neighbor {
 	{
 		return trajID_b;
 	}
+	Trajectory getFirstTraj(){
+		return traj_a;
+	}
+	Trajectory getSecondTraj(){
+		return traj_b;
+	}
 }

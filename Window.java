@@ -83,9 +83,10 @@ public class Window extends JFrame implements ActionListener{
 		
 		if(e.getSource() == buttons.autofill){
 			//draw.autoFillDrones(getGraphics());
-			Robot.robots.clear();
-			new Robot(Trajectory.trajectories.get(0), 0);
-			Trajectory.trajectories.get(0).populateNeighbors();
+			DrawPanel.robotList.clear();
+			new Robot(DrawPanel.trajectoryList.get(0), 0);
+			DrawPanel.trajectoryList.get(0).populateNeighbors();
+			Experiments.clear();
 			repaint();
 		}
 		
@@ -126,10 +127,10 @@ public class Window extends JFrame implements ActionListener{
 			//TODO need show robot ID method
 		}
 		
-		if(e.getSource() == buttons.removeData)
-		{
-			draw.removeData();
-		}
+//		if(e.getSource() == buttons.removeData)
+//		{
+//			draw.removeData();
+//		}
 
 		if(e.getSource() == menu.load){
 			draw.loadGrid();
@@ -147,23 +148,23 @@ public class Window extends JFrame implements ActionListener{
 		
 		if(e.getSource() == zoomIn){
 			Constants.setScale((float)1.1);
-			for(Trajectory t:Trajectory.trajectories){
-				t.setX(t.getX()*Constants.scale);
-				t.setY(t.getY()*Constants.scale);
+			for(Trajectory t:DrawPanel.trajectoryList){
+				t.setX((float)(t.getX()*Constants.scale));
+				t.setY((float)(t.getY()*Constants.scale));
 			}
-			for(Robot r:Robot.robots){
-				r.setRadius(r.getRadius()*Constants.scale);
+			for(Robot r:DrawPanel.robotList){
+				r.setRadius((float)(r.getRadius()*Constants.scale));
 			}
 		}
 		
 		if(e.getSource() == zoomOut){
 			Constants.setScale((float)(1/1.1));
-			for(Trajectory t:Trajectory.trajectories){
-				t.setX(t.getX()*Constants.scale);
-				t.setY(t.getY()*Constants.scale);
+			for(Trajectory t:DrawPanel.trajectoryList){
+				t.setX((float)(t.getX()*Constants.scale));
+				t.setY((float)(t.getY()*Constants.scale));
 			}
-			for(Robot r:Robot.robots){
-				r.setRadius(r.getRadius()*Constants.scale);
+			for(Robot r:DrawPanel.robotList){
+				r.setRadius((float)(r.getRadius()*Constants.scale));
 			}
 		}
 		

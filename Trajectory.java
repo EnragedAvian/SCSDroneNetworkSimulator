@@ -10,8 +10,9 @@ public class Trajectory {
 	private int trajID;  // Identification number for trajectory
 	private int direction;
 	ArrayList<Neighbor> neighbors;  // Neighbors to be better defined later
-  
-	public static ArrayList<Trajectory> trajectories = new ArrayList<Trajectory>();
+
+	private ArrayList<Data> dataList;           //for keeping data
+//	public static ArrayList<Trajectory> trajectories = new ArrayList<Trajectory>();
   
   /*public void buildNetwork() {
     for (int i = 0; i<trajectories.size(); i++) {
@@ -20,19 +21,20 @@ public class Trajectory {
   }*/
   
 	public Trajectory(float xCoord, float yCoord) {
+		
 		x = xCoord;
 		y = yCoord;
     
-		trajectories.add(this);  // Adding trajectory to the arraylist of trajectories
+		DrawPanel.trajectoryList.add(this);  // Adding trajectory to the arraylist of trajectories
     
-		trajID = trajectories.size();
-		//System.out.println("Trajectory size: " + trajectories.size());
+		trajID = DrawPanel.trajectoryList.size();
+		//System.out.println("Trajectory size: " + DrawPanel.trajectoryList.size());
     
 		neighbors = new ArrayList<Neighbor>();
+		dataList = new ArrayList<Data>();                      //for keeping data
     
     
-    
-		if (trajectories.size() == 1) {
+		if (DrawPanel.trajectoryList.size() == 1) {
 			direction = 1;
 			//System.out.println("Created Direction for trajectory " + trajID);
 		} else {
@@ -40,10 +42,10 @@ public class Trajectory {
 			ArrayList<Trajectory> compareTrajectories = new ArrayList<Trajectory>();
       
       
-			for (int i = 0; i<trajectories.size(); i++) {
-				if (trajectories.get(i).getID()!=trajID) {
-					if (inRange(trajectories.get(i))) {
-						compareTrajectories.add(trajectories.get(i));
+			for (int i = 0; i<DrawPanel.trajectoryList.size(); i++) {
+				if (DrawPanel.trajectoryList.get(i).getID()!=trajID) {
+					if (inRange(DrawPanel.trajectoryList.get(i))) {
+						compareTrajectories.add(DrawPanel.trajectoryList.get(i));
 						//System.out.println("Trajectory found within range!");
 					}
 				}
@@ -94,7 +96,7 @@ public class Trajectory {
 		Neighbor newNeighbor = new Neighbor(this, t);
 		neighbors.add(newNeighbor);
 	}
-	
+  
 	void setX(float xval){
 		x = xval;
 	}
@@ -102,7 +104,7 @@ public class Trajectory {
 	void setY(float yval){
 		y = yval;
 	}
-  
+	
 	boolean inRange(Trajectory t) {
 		float xDist = Math.abs(x - t.getX());
 		float yDist = Math.abs(y - t.getY());
@@ -121,14 +123,14 @@ public class Trajectory {
 		float tempAngle = 0;
 		float tempDiff;
 		float angle;
-		for(Robot r: Robot.robots) {
+		for(Robot r: DrawPanel.robotList) {
 			if (r.getID() == trajID) {
 				tempAngle = r.getAngle();
 			}
 		}
 		for(Neighbor n: neighbors) {
 			boolean filled = false;
-			for(Robot r: Robot.robots) {
+			for(Robot r: DrawPanel.robotList) {
 				if (r.getID() == n.trajID_b) {
 					filled = true;
 				}
@@ -140,5 +142,23 @@ public class Trajectory {
 				n.traj_b.populateNeighbors();
 			}
 		}
+	}
+	
+	//adding data
+	void addData(Data data){
+		dataList.add(data);
+	}
+	
+	//to check if there is any data to send to drones
+	int dataSize(){
+		return dataList.size();
+	}
+	
+	//sending data
+	ArrayList<Data> sendData(){
+		ArrayList<Data> dataList2 = new ArrayList<Data>();
+		while(dataList.size() > 0)
+			dataList2.add(dataList.remove(0));
+		return dataList2;
 	}
 }
