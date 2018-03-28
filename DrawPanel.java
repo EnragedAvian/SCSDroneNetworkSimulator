@@ -319,6 +319,30 @@ public class DrawPanel extends JPanel {
 	    Experiments.clear();
 	}
 	
+	public void test(int i){
+			int rows = i;
+			int cols = i;
+			//Makes each trajectory
+			float anchorX = -(cols-1)*(Constants.trajRadius*2 + 20)/2;
+			float anchorY = -(rows-1)*(Constants.trajRadius*2 + 20)/2;
+			
+			
+		    for(int r = 0; r < rows; r++)
+		    {
+		    	for(int c = 0; c < cols; c++)
+		    	{
+		    		new Trajectory(anchorX + c*(Constants.trajRadius*2 + Constants.trajPadding), anchorY + r*(Constants.trajRadius*2 + Constants.trajPadding));
+		    	}
+		    }
+		    DrawPanel.robotList.clear();
+			new Robot(DrawPanel.trajectoryList.get(0), 0);
+			DrawPanel.trajectoryList.get(0).populateNeighbors();
+			if(i != 1)
+				robotList.remove(0);
+			Experiments.clear();
+			repaint();
+	}
+	
 	public void saveGrid(){
 		JFrame parentFrame = new JFrame();
 		 

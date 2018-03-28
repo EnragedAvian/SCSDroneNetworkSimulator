@@ -58,6 +58,7 @@ public class Window extends JFrame implements ActionListener{
 		buttons.start.addActionListener(this);
 		buttons.addData.addActionListener(this);
 		buttons.removeData.addActionListener(this);
+		buttons.autoTest.addActionListener(this);
 		
 		menu.load.addActionListener(this);
 		menu.newGraph.addActionListener(this);
@@ -131,6 +132,19 @@ public class Window extends JFrame implements ActionListener{
 //		{
 //			draw.removeData();
 //		}
+		
+		if(e.getSource() == buttons.autoTest)
+		{
+			draw.test(1);
+			Constants.running = true;
+			if(Experiments.period != -1){
+				Constants.running = false;
+				DrawPanel.robotList.clear();
+				DrawPanel.trajectoryList.clear();
+				draw.test(4);
+			}
+			repaint();
+		}
 
 		if(e.getSource() == menu.load){
 			draw.loadGrid();

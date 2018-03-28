@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class Experiments {
 	static ArrayList<ArrayList<Integer>> log = new ArrayList<ArrayList<Integer>>();
-	static long period = -1;
+	public static long period = -1;
 	public static ArrayList<Integer> snap;
 	
 	static void addToLog(ArrayList<Integer> snapshot) {
