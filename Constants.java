@@ -7,6 +7,7 @@ public class Constants {
 	public static float robotSpeed = (float)0.02;
 	public static boolean running = false;
 	public static double scale = 1;
+	public static boolean expRunning = false;
 //	public static double translation = 1; //used for centering after scaling
   
 	public static float normalizeAngle(float angle) {  // Function which places an angle between range of 0-2pi. Replaced old one in Neighbor class

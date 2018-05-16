@@ -1,8 +1,17 @@
 import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingWorker;
 
 public class Experiments {
 	static ArrayList<ArrayList<Integer>> log = new ArrayList<ArrayList<Integer>>();
-	static long period = -1;
+	public static long period = -1;
 	public static ArrayList<Integer> snap;
 	
 	static void addToLog(ArrayList<Integer> snapshot) {

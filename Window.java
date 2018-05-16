@@ -4,6 +4,7 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -57,8 +58,8 @@ public class Window extends JFrame implements ActionListener{
 		buttons.showEdges.addActionListener(this);
 		buttons.start.addActionListener(this);
 		buttons.addData.addActionListener(this);
-		buttons.removeData.addActionListener(this);
-		
+		buttons.runExp.addActionListener(this);
+
 		menu.load.addActionListener(this);
 		menu.newGraph.addActionListener(this);
 		menu.save.addActionListener(this);
@@ -96,8 +97,8 @@ public class Window extends JFrame implements ActionListener{
 			repaint();
 		}
 		
-		if(e.getSource() == buttons.removeTraj){
-			draw.removeTraj();
+		if(e.getSource() == buttons.runExp){
+			Constants.expRunning = true;
 			repaint();
 		}
 		
@@ -118,6 +119,7 @@ public class Window extends JFrame implements ActionListener{
 			} else {
 				Constants.running = true;
 				buttons.start.setText("Stop");
+//				DrawPanel.oneRound = new Date().getTime();
 			}
 		}
 		

@@ -27,6 +27,7 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeMap;
 
+import javax.net.ssl.SSLException;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JFileChooser;
@@ -44,6 +45,11 @@ public class DrawPanel extends JPanel {
 	//private Graphics g;
 	//private float diam;
 	//private int distBetweenTraj;
+	
+	private int timeScale = 10;
+	private long oneQuarter = 13000 / timeScale;
+//	1523386835726
+//	15218236000000
 	private boolean showEdges = false;
 	private ArrayList<Shape> robotShapes = new ArrayList<>();
 	
@@ -53,19 +59,63 @@ public class DrawPanel extends JPanel {
 	
 	public static ArrayList<Trajectory> trajectoryList = new ArrayList<Trajectory>();		//to keep the trajectories list
 	public static ArrayList<Robot> robotList = new ArrayList<Robot>();						//to keep the robots list
-	
+	public static Timer timer;
 	
 	DrawPanel () {
+		
 		// Adding timer which controls the timing and movement of things within the program
-		Timer timer = new Timer(10, new ActionListener() {
+		timer = new Timer(timeScale, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (Constants.running) {
-					for(Robot r: robotList) {
+					run();
+				}
+				
+
+				if(Constants.expRunning){
+					expRun();
+				}
+				
+				repaint();
+			}
+		});
+		timer.start();	
+		
+		//click to remove drones
+		addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent me) {
+            	//System.out.println("Click!");
+                super.mouseClicked(me);
+                
+                //TODO work with scaling
+                /*Point p = new Point((int)(me.getX()*Constants.scale), (int)(me.getY()*Constants.scale));
+                p.translate((int)Constants.translation, (int)Constants.translation);
+                */
+                
+                for (int i = 0; i < robotShapes.size(); i++) {
+                	Shape r = robotShapes.get(i);
+                    if (r.contains(me.getPoint())) {//check if mouse is clicked within shape
+                        robotList.remove(i); //not 100% on why this works -- might have some issues with IDs in the future
+                        Experiments.clear();
+                    }
+                }
+            }
+        });
+	}
+	
+	public void run(){
+		for(Robot r: robotList) {
 			    		r.move();
 			    		r.fetchData();
 			    		deliveredData.addAll(r.deliveryData());
 				    }
+					
+					//circling time
+//					if(Math.abs(robotList.get(0).getAngle() - Math.PI/2) < 0.01){
+//						oneQuarter = new Date().getTime() - oneQuarter;
+//						System.out.println("oneQuarter is: " + oneQuarter);
+//					}
 					
 					// if the current robot is within the detection range of the 4 compass points
 					if(Math.abs(robotList.get(0).getAngle()-0) < 0.01 || Math.abs(robotList.get(0).getAngle()-(Math.PI/2)) < 0.01 || Math.abs(robotList.get(0).getAngle() - Math.PI) < 0.01 || Math.abs(robotList.get(0).getAngle() - (3*Math.PI/2)) < 0.01 || Math.abs(robotList.get(0).getAngle() - (2*Math.PI)) < 0.01) {
@@ -132,17 +182,17 @@ public class DrawPanel extends JPanel {
 				    	for(Data data:fetchedData){
 				    		fetchingDelay += data.getFetchingTime() - data.getCreationTime();
 				    	}
-				    	System.out.println("Average Fetching Delay: "+ ((double)fetchingDelay/fetchedData.size()));
+				    	System.out.println("Average Fetching Delay: "+ ((double)fetchingDelay/fetchedData.size()) + "ms, " + ((double)fetchingDelay/(fetchedData.size()*oneQuarter)) + "units");
 				    	long deliveryDelay = 0;
 				    	for(Data data:deliveredData){
 				    		deliveryDelay += data.getDeliveryTime() - data.getFetchingTime();
 				    	}
-				    	System.out.println("Average Delivery Delay: "+ ((double)deliveryDelay/deliveredData.size()));
+				    	System.out.println("Average Delivery Delay: "+ ((double)deliveryDelay/deliveredData.size()) + "ms, " + ((double)deliveryDelay/(deliveredData.size()*oneQuarter)) + "units");
 				    	long totalDelay = 0;
 				    	for(Data data:deliveredData){
 				    		totalDelay += data.getDeliveryTime() - data.getCreationTime();
 				    	}
-				    	System.out.println("Average Total Delay: "+ ((double)totalDelay/deliveredData.size()));
+				    	System.out.println("Average Total Delay: "+ ((double)totalDelay/deliveredData.size()) + "ms, " + ((double)totalDelay/(deliveredData.size()*oneQuarter)) + "units");
 				    }
 				    
 				    //for randomly creation of data with probability of 1%
@@ -154,35 +204,167 @@ public class DrawPanel extends JPanel {
 						trajectoryList.get(dataSource).addData(newData);
 						generatedData.add(newData);
 					}
-				}
-				
-				
-				repaint();
-			}
-		});
-		timer.start();	
+	}
+	
+	public void expRun(){
+		ArrayList<String> expResults = new ArrayList<>();
+		//String is none removed, one random removed, random num random removed, whole row removed
+		ArrayList<String> testedGrids = new ArrayList<>();
+		DrawPanel.timer.setDelay(1);
 		
-		//click to remove drones
-		addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent me) {
-            	//System.out.println("Click!");
-                super.mouseClicked(me);
-                
-                //TODO work with scaling
-                /*Point p = new Point((int)(me.getX()*Constants.scale), (int)(me.getY()*Constants.scale));
-                p.translate((int)Constants.translation, (int)Constants.translation);
-                */
-                
-                for (int i = 0; i < robotShapes.size(); i++) {
-                	Shape r = robotShapes.get(i);
-                    if (r.contains(me.getPoint())) {//check if mouse is clicked within shape
-                        robotList.remove(i); //not 100% on why this works -- might have some issues with IDs in the future
-                        Experiments.clear();
-                    }
-                }
-            }
-        });
+		//Input Box
+		JTextField aField = new JTextField(5);
+		JTextField bField = new JTextField(5);
+		JTextField cField = new JTextField(5);
+		JTextField dField = new JTextField(5);
+
+		JPanel input = new JPanel();
+		input.setLayout(new BoxLayout(input, BoxLayout.Y_AXIS));
+
+		input.add(new JLabel("Range of rows to run between (inclusive):"));
+		input.add(aField);
+		input.add(bField);
+
+		input.add(Box.createVerticalStrut(15));
+
+		input.add(new JLabel("Range of cols to run between (inclusive):"));
+		input.add(cField);
+		input.add(dField);
+
+		input.add(Box.createVerticalStrut(15));
+		
+		int result = JOptionPane.showConfirmDialog(null, input, "Run Experiment", JOptionPane.OK_CANCEL_OPTION);
+		
+		int rowLow = 0;
+		int rowHigh = 0;
+		int colLow = 0;
+		int colHigh = 0;
+		
+		if (result == JOptionPane.OK_OPTION) {
+			rowLow = Integer.parseInt(aField.getText());
+			rowHigh = Integer.parseInt(bField.getText());
+			colLow = Integer.parseInt(cField.getText());
+			colHigh = Integer.parseInt(dField.getText());
+			if(rowLow > rowHigh){
+				int temp = rowLow;
+				rowLow = rowHigh;
+				rowHigh = temp;
+			}
+			if(colLow > colHigh){
+				int temp = colLow;
+				colLow = colHigh;
+				colHigh = temp;
+			}
+		}
+		
+		for(int i = rowLow; i<=rowHigh; i++){
+			for(int j = colLow; j<=colHigh; j++){
+				if(!(testedGrids.contains(i + "x" + j) || testedGrids.contains(j + "x" + i))){
+				    //Makes each trajectory
+					float anchorX = -(j-1)*(Constants.trajRadius*2 + 20)/2;
+					float anchorY = -(i-1)*(Constants.trajRadius*2 + 20)/2;
+					
+					clear();
+					
+					for(int r = 0; r < i; r++)
+				    {
+				    	for(int c = 0; c < j; c++)
+				    	{
+				    		new Trajectory(anchorX + c*(Constants.trajRadius*2 + Constants.trajPadding), anchorY + r*(Constants.trajRadius*2 + Constants.trajPadding));
+				    	}
+				    }
+					
+					//autofill
+					robotList.clear();
+					new Robot(trajectoryList.get(0), 0);
+					trajectoryList.get(0).populateNeighbors();
+					Experiments.clear();
+					
+					long noneResult = -1;
+					long oneResult = -1;
+					long randomResult = -1;
+					long rowResult = -1;
+					Random rand = new Random();
+					int rand1 = rand.nextInt(robotList.size()); //location of single drone removal
+					int rand2 = rand.nextInt(robotList.size()); //number to randomly remove, (change to floor at 1?)
+					int rand4 = rand.nextInt(i); //row to remove
+					String removed1 = ""; //single removed drone
+					ArrayList<Integer> removed2 = new ArrayList<>(); //random removed
+					ArrayList<Integer> removed3 = new ArrayList<>(); //row removed
+					
+					//get period
+					while(Experiments.period == -1){
+						run();
+						noneResult = Experiments.period;
+					}
+					
+					if(i > 1 || j > 1){
+						
+						Experiments.clear();
+						removed1 = "" + robotList.get(rand1).getID();
+						robotList.remove(rand1);
+						while(Experiments.period == -1){
+							run();
+							oneResult = Experiments.period;
+						}
+						
+						robotList.clear();
+						new Robot(trajectoryList.get(0), 0);
+						trajectoryList.get(0).populateNeighbors();
+						Experiments.clear();
+						for(int rem = 0; rem<rand2;rem++){
+							int rand3 = rand.nextInt(robotList.size()); //location of random drone to remove
+							removed2.add(robotList.get(rand3).getID());
+							robotList.remove(rand3);
+						}
+						while(Experiments.period == -1){
+							run();
+							randomResult = Experiments.period;
+						}
+						//Remove row if there is more than one row
+						if(i > 1){
+							robotList.clear();
+							new Robot(trajectoryList.get(0), 0);
+							trajectoryList.get(0).populateNeighbors();
+							Experiments.clear();
+							//Remove whole row
+							while(removed3.size()<j){
+								int rem = j*rand4;
+								removed3.add(robotList.get(rem).getID());
+								robotList.remove(rem);
+							}
+							//Remove whole col
+							/*int rand4 = rand.nextInt(j);
+							for(int colRem = 0; colRem < i; colRem++){
+								int rem = rowRem+i*rand4;
+								removed3.add(robotList.get(rem).getID());
+							}
+							*/
+							while(Experiments.period == -1){
+								run();
+								rowResult = Experiments.period;
+							}
+						}
+						else{
+							rand4 = -1;
+						}
+					}
+					
+					expResults.add("\tNone Removed: " + noneResult + "\n" 
+							+ "\tOne Removed, ID = [" + removed1 + "]: " + oneResult + "\n"
+							+ "\tRandom Num Removed, IDs = " + removed2.toString() + ": " + randomResult + "\n"
+							+ "\tRow Removed, Row Number = " + rand4 + " IDs = " + removed3.toString() + ": " + rowResult + "\n");
+					testedGrids.add(i + "x" + j);
+				}
+			}
+		}
+		String out = "";
+		for(int l = 0; l <testedGrids.size(); l++){
+			out = out + testedGrids.get(l) + ": Periods\n" + expResults.get(l) + "\n";  
+		}
+		System.out.println(out);
+		DrawPanel.timer.setDelay(10);
+		Constants.expRunning = false;
 	}
 	
 	public void createRobot(Graphics g) {
@@ -505,7 +687,6 @@ public class DrawPanel extends JPanel {
 		JTextField aField = new JTextField(5);
 		JPanel input = new JPanel();
 		input.setLayout(new BoxLayout(input, BoxLayout.Y_AXIS));
-
 		input.add(new JLabel("Enter robot ID to add data to"));
 		input.add(aField);
 		
@@ -524,7 +705,6 @@ public class DrawPanel extends JPanel {
 		JTextField aField = new JTextField(5);
 		JPanel input = new JPanel();
 		input.setLayout(new BoxLayout(input, BoxLayout.Y_AXIS));
-
 		input.add(new JLabel("Enter robot ID to remove data from"));
 		input.add(aField);
 		
